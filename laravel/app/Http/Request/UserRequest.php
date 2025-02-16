@@ -14,15 +14,15 @@ class UserRequest extends FormRequest
     public function rules()
     {
         return [
-            'role_id' => 'nullable|integer|exists:roles,id',
+            'role_id' => 'nullable|integer|exists:\App\Models\Role,id',
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'user_name' => [
                 'required', 'string', 'max:50',
                 'regex:/^[a-zA-Z0-9._]+$/',
-                'unique:App\Models\User,user_name,' . $this->route('user')
+                'unique:\App\Models\User,user_name,' . $this->route('user')
             ],
-            'email' => 'required|email|unique:App\Models\User,email,' . $this->route('user'),
+            'email' => 'required|email|unique:\App\Models\User,email,' . $this->route('user'),
             'address' => 'nullable|string|max:255',
             'password' => [
                 'nullable', 'string', 'min:8', 'max:16', 'confirmed',

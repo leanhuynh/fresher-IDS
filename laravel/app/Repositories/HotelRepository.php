@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use App\Common\Constant;
 use App\Models\Role;
+use App\Models\User;
 use Exception;
 
 class HotelRepository implements HotelRepositoryInterface 
@@ -76,7 +77,18 @@ class HotelRepository implements HotelRepositoryInterface
     public function searchHotels(array $filters) {
         try {
             $query = $this->_model::query()->with('city'); // Khởi tạo query builder
+            if (empty($filters['owner_id'])) {
+                throw new Exception('Owner id is required!!');
+            }
+            $owner = User::with('role')->findOrFail($filters['owner_id']);
+            
+            // Nếu owner không phải là admin thì chỉ hiển thị hotel của owner đó
+            // nếu owner là admin thì hiển thị tất cả hotel
+            if ($owner->role->name !== Role::ADMIN_ROLE_NAME) {
+                $query->where('owner_id', $filters['owner_id']);
+            }
 
+            // Lọc theo city_id, hotel_code, name_en
             if (!empty($filters['city_id'])) {
                 $query->where('city_id', $filters['city_id']);
             }
@@ -86,13 +98,18 @@ class HotelRepository implements HotelRepositoryInterface
             if (!empty($filters['name_en'])) {
                 $query->where('name_en', 'LIKE', "%{$filters['name_en']}%");
             }
-            if (!empty($filters['owner_id'])) {
-                $query->where('owner_id', $filters['owner_id']);
-            }
 
+            // Sắp xếp theo name_en
+            $query->orderBy('name_en', 'asc');
+
+            // Sắp xếp theo id
             return $query->paginate(Constant::PAGINATE_DEFAULT)->appends($filters); 
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            throw new Exception('Owner not found');
+        } catch (\Illuminate\Database\QueryException $e) {
+            throw new Exception('Database has some errors!!');
         } catch (Exception $e) {
-            throw new Exception('Pagination or database has some errors!!');
+            throw $e;
         }
     }
 
@@ -141,15 +158,20 @@ class HotelRepository implements HotelRepositoryInterface
         try {
             // Lấy thông tin của hotel theo id
             $hotel = $this->_model::findOrFail($hotel_id);
-
             // Kiểm tra xem hotel có tồn tại không
             if (empty($hotel)) {
                 throw new Exception('Hotel not found');
             }
 
-            // Kiểm tra xem user có quyền truy cập hotel này không
-            if ($hotel->owner_id != $owner_id) {
-                throw new Exception('You do not have permission to access this hotel');
+            // Lấy thông tin của owner
+            $owner= User::with('role')->findOrFail($owner_id);
+
+            // nếu owner không phải là admin
+            if ($owner->role->name !== Role::ADMIN_ROLE_NAME) {
+                // Kiểm tra xem user có quyền truy cập hotel này không
+                if ($hotel->owner_id != $owner_id) {
+                    throw new Exception('You do not have permission to access this hotel');
+                }            
             }
 
             // Xóa hotel

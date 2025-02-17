@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Common\StatusCode;
+use App\Common\Constant;
 
 class CheckIfAdmin
 {
@@ -19,7 +20,7 @@ class CheckIfAdmin
     public function handle(Request $request, Closure $next)
     {
         // Kiểm tra vai trò của người dùng
-        if (Auth::user() && Auth::user()->role && Auth::user()->role->name !== 'admin') {
+        if (Auth::user() && Auth::user()->role && Auth::user()->role->name !== Constant::ADMIN_ROLE_NAME) {
             // Nếu không phải admin, trả về lỗi 403
             abort(StatusCode::HTTP_STATUS_FORBIDDEN, 'You do not have permission to view this page.');
         }

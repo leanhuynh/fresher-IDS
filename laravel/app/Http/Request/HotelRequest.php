@@ -17,21 +17,21 @@ class HotelRequest extends FormRequest
             'name_en' => [
                 'required', 'string', 'max:255',
                 'unique:\App\Models\Hotel,name_en,' . $this->route('hotel'),
-                'regex:/^[\pL\s]+$/u' // Chỉ cho phép ký tự chữ và khoảng trắng
+                'regex:/^[\pL0-9\s]+$/u'  // Cho phép chữ cái, số và khoảng trắng
             ],
             'name_jp' => [
                 'required', 'string', 'max:255',
                 'unique:\App\Models\Hotel,name_jp,' . $this->route('hotel'),
-                'regex:/^[\pL\s]+$/u' // Chỉ cho phép ký tự chữ và khoảng trắng
+                'regex:/^[\pL0-9\s]+$/u'  // Cho phép chữ cái, số và khoảng trắng
             ],
             'city_id' => 'required|integer|exists:\App\Models\City,id',
             'owner_id' => 'required|integer|exists:\App\Models\User,id',
             'hotel_code' => [
-                'nullable', 'string', 'size:6', 'alpha_num',
+                'required', 'string', 'size:6', 'alpha_num',
                 'unique:\App\Models\Hotel,hotel_code,' . $this->route('hotel')
             ],
             'company_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:\App\Models\Hotel,email,' . $this->route('hotel'),
+            'email' => 'required|email',
             'telephone' => [
                 'required', 'string', 'unique:\App\Models\Hotel,telephone,' . $this->route('hotel'),
                 'regex:/^\+?[0-9\-\s]+$/' // Chỉ chấp nhận số, dấu "-" và khoảng trắng

@@ -88,7 +88,7 @@ class HotelRepository implements HotelRepositoryInterface
             
             // Nếu owner không phải là admin thì chỉ hiển thị hotel của owner đó
             // nếu owner là admin thì hiển thị tất cả hotel
-            if ($owner->role->name !== Role::ADMIN_ROLE_NAME) {
+            if ($owner->role->name !== Constant::ADMIN_ROLE_NAME) {
                 $query->where('owner_id', $filters['owner_id']);
             }
 

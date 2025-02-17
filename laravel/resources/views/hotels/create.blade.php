@@ -28,7 +28,7 @@
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">Hotel Code</label>
+                        <label class="form-label">Hotel Code (6 Digits)<span style="color:red">*</span></label>
                         <input id="hotel_code" placeholder="enter hotel code" type="text" class="form-control">
                     </div>
                 </div>

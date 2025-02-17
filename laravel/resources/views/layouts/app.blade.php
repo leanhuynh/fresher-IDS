@@ -40,11 +40,18 @@
 
     // session alert
     function sessionAlert() {
-        // alert message whether success or fail
+        // alert message
         if ('{{session('success')}}') {
             customAlert('{{session('success')}}', 'success');
-        } else if ('{{session('error')}}') {
+        }
+        if ('{{session('error')}}') {
             customAlert('{{session('error')}}', 'error');
+        }
+        if ('{{session('warning')}}') {
+            customAlert('{{session('warning')}}', 'warning');
+        }
+        if ('{{session('info')}}') {
+            customAlert('{{session('info')}}', 'info');
         }
     }
 

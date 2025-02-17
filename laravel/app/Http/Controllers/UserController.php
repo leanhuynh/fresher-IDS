@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Services\UserService;
 use App\Services\RoleService;
+use App\Common\StatusCode;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use Exception;
@@ -21,7 +23,6 @@ class UserController extends Controller
         UserService $userService,
         RoleService $roleService)
     {
-        // $this->middleware('auth');
         $this->_userService = $userService;
         $this->_roleService = $roleService;
     }
@@ -29,6 +30,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
         try {
+
             $users = $this->_userService->getAll();
 
             if ($request->ajax()) {
@@ -38,10 +40,14 @@ class UserController extends Controller
                 ]);
             }
             return view('users.index', compact('users'));
-        } catch (Exception $e) {
-            log::error($e->getMessage());
+        } catch (AuthorizationException $e) {
+            Log::error($e->getMessage());
             session()->flash('error', $e->getMessage());
-            abort(404);
+            return view('error.default', ['status' => StatusCode::HTTP_STATUS_FORBIDDEN, 'message' => $e->getMessage()]); // Use StatusCode::HTTP_STATUS_FORBIDDEN
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            session()->flash('error', $e->getMessage());
+            return view('error.default', ['status' => StatusCode::HTTP_STATUS_NOT_FOUND, 'message' => $e->getMessage()]); // Use StatusCode::HTTP_STATUS_NOT_FOUND
         }
     }
 
@@ -49,38 +55,56 @@ class UserController extends Controller
     {
         try {
             $id = Auth::user()->id;
+
             $user = $this->_userService->getUserProfileById($id);
             $roles = $this->_roleService->getAll();
-            log::info("get infor of user id = {$id}");
+            Log::info("get info of user id = {$id}");
             return view('users.profile', compact('user', 'roles'));
+        } catch (AuthorizationException $e) {
+            Log::error($e->getMessage());
+            session()->flash('error', $e->getMessage());
+            return view('error.default', ['status' => StatusCode::HTTP_STATUS_FORBIDDEN, 'message' => $e->getMessage()]); // Use StatusCode::HTTP_STATUS_FORBIDDEN
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return view('home');
+            session()->flash('error', $e->getMessage());
+            return view('error.default', ['status' => StatusCode::HTTP_STATUS_NOT_FOUND, 'message' => $e->getMessage()]); // Use StatusCode::HTTP_STATUS_NOT_FOUND
         }
     }
 
     public function editUserProfileById($id)
     {
         try {
+
             $user = $this->_userService->getUserProfileById($id);
             $roles = $this->_roleService->getAll();
-            log::info("get infor of user id = {$id}");
+            Log::info("get info of user id = {$id}");
             return view('users.profile', compact('user', 'roles'));
+        } catch (AuthorizationException $e) {
+            Log::error($e->getMessage());
+            session()->flash('error', $e->getMessage());
+            return view('error.default', ['status' => StatusCode::HTTP_STATUS_FORBIDDEN, 'message' => $e->getMessage()]); // Use StatusCode::HTTP_STATUS_FORBIDDEN
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return view('home');
+            session()->flash('error', $e->getMessage());
+            return view('error.default', ['status' => StatusCode::HTTP_STATUS_NOT_FOUND, 'message' => $e->getMessage()]); // Use StatusCode::HTTP_STATUS_NOT_FOUND
         }
     }
 
     public function createUser() 
     {
         try {
-            log::info("get ui of create user");
+            
+            Log::info("get ui of create user");
             $roles = $this->_roleService->getAll();
             return view('users.create', compact('roles'));
+        } catch (AuthorizationException $e) {
+            Log::error($e->getMessage());
+            session()->flash('error', $e->getMessage());
+            return view('error.default', ['status' => StatusCode::HTTP_STATUS_FORBIDDEN, 'message' => $e->getMessage()]); // Use StatusCode::HTTP_STATUS_FORBIDDEN
         } catch (Exception $e) {
-            log::error($e->getMessage());
-            return view('home');
+            Log::error($e->getMessage());
+            session()->flash('error', $e->getMessage());
+            return view('error.default', ['status' => StatusCode::HTTP_STATUS_NOT_FOUND, 'message' => $e->getMessage()]); // Use StatusCode::HTTP_STATUS_NOT_FOUND
         }
     }
 }

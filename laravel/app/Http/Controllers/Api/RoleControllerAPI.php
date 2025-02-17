@@ -49,7 +49,7 @@ class RoleControllerAPI extends Controller
         try {
             $role = $this->_roleService->updateRole($request->validated(), $id);
             log::info("update of role id {$id}");
-            return response()->json(['role' => $role, 'message' => 'Update successfully!'], StatusCode::HTTP_STATUS_OK);
+            return response()->json(['role' => $role, 'message' => 'Update role successfully!'], StatusCode::HTTP_STATUS_OK);
         } catch (Exception $e) {
             log::error($e->getMessage());
             return response()->json(['message' => $e->getMessage()], StatusCode::HTTP_STATUS_INTERNAL_SERVER_ERROR);

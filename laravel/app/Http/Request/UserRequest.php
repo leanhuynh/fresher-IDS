@@ -8,7 +8,7 @@ class UserRequest extends FormRequest
 {
     public function authorize()
     {
-        return true; // Cho phép mọi request
+        return true;
     }
 
     public function rules()
@@ -35,31 +35,31 @@ class UserRequest extends FormRequest
     public function messages()
     {
         return [
-            'role_id.exists' => __('validation.role_id.exists'),
+            'role_id.exists' => __('validation.exists'),
 
-            'first_name.required' => __('validation.first_name.required'),
-            'first_name.max' => __('validation.first_name.max'),
+            'first_name.required' => __('validation.required'),
+            'first_name.max' => __('validation.max'),
 
-            'last_name.required' => __('validation.last_name.required'),
-            'last_name.max' => __('validation.last_name.max'),
+            'last_name.required' => __('validation.required'),
+            'last_name.max' => __('validation.max'),
 
-            'user_name.required' => __('validation.user_name.required'),
-            'user_name.regex' => __('validation.user_name.regex'),
-            'user_name.unique' => __('validation.user_name.unique'),
-            'user_name.max' => __('validation.user_name.max'),
+            'user_name.required' => __('validation.required'),
+            'user_name.regex' => __('validation.regex'),
+            'user_name.unique' => __('validation.unique'),
+            'user_name.max' => __('validation.max'),
 
-            'email.required' => __('validation.email.required'),
-            'email.unique' => __('validation.email.unique'),
-            'email.email' => __('validation.email.email'),
+            'email.required' => __('validation.required'),
+            'email.unique' => __('validation.unique'),
+            'email.email' => __('validation.email'),
 
-            'password.nullable' => __('validation.password.nullable'),
-            'password.min' => __('validation.password.min'),
-            'password.max' => __('validation.password.max'),
-            'password.confirmed' => __('validation.password.confirmed'),
-            'password.regex' => __('validation.password.regex'),
+            'password.nullable' => __('validation.nullable'),
+            'password.min' => __('validation.min'),
+            'password.max' => __('validation.max'),
+            'password.confirmed' => __('validation.confirmed'),
+            'password.regex' => __('validation.regex'),
 
-            'avatar.image' => __('validation.avatar.image'),
-            'avatar.max' => __('validation.avatar.max'),
+            'avatar.image' => __('validation.image'),
+            'avatar.max' => __('validation.max'),
         ];
     }
 }

@@ -7,29 +7,22 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use App\Common\Constant;
 use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 
-
-/**
- * @OA\Info(
- *     version="1.0.0",
- *     title="API Documentation",
- *     description="Tài liệu API"
- * )
- */
 class RoleController extends Controller
 {
     protected RoleService $_roleService;
 
     public function __construct(RoleService $roleService)
     {
-        // $this->middleware('auth');
         $this->_roleService = $roleService;
     }
 
     public function index(Request $request)
     {
         try {
+
             $roles = $this->_roleService->getAll(); // Gọi service để lấy danh sách roles
             
             if ($request->ajax()) {
@@ -40,16 +33,21 @@ class RoleController extends Controller
             }
 
             return view('roles.index', compact('roles'));
+        } catch (AuthorizationException $e) {
+            Log::error($e->getMessage()); // Ghi log lỗi
+            session()->flash('error', $e->getMessage());
+            return view('error.default', ['status' => StatusCode::HTTP_STATUS_FORBIDDEN, 'message' => $e->getMessage()]); // Use StatusCode::HTTP_STATUS_FORBIDDEN
         } catch (Exception $e) {
             Log::error($e->getMessage()); // Ghi log lỗi
             session()->flash('error', 'Something went wrong!');
-            abort(404);
+            return view('error.default', ['status' => StatusCode::HTTP_STATUS_NOT_FOUND, 'message' => $e->getMessage()]); // Use StatusCode::HTTP_STATUS_NOT_FOUND
         }
     }
 
-
-    public function createRole() {
+    public function createRole()
+    {
         try {
+
             $roles_constant = Constant::getRoles();
             $roles_exist = $this->_roleService->getAll();
 
@@ -57,7 +55,7 @@ class RoleController extends Controller
             try {
                 $roles_existed_collection = collect(collect($roles_exist)['data']);
             } catch (Exception $e) {
-                throw new Exception('data missing some fields to work!!!');
+                throw new Exception('Data is missing some fields to work!');
             }
 
             $roles = $roles_constant->map(function ($item) use ($roles_existed_collection) {
@@ -65,24 +63,34 @@ class RoleController extends Controller
                 return (object) $item;
             });
             
-            log::info('get create role page');
+            Log::info('get create role page');
             return view('roles.create', ['roles' => $roles]);
-            // return response()->json($roles);
+        } catch (AuthorizationException $e) {
+            Log::error($e->getMessage());
+            session()->flash('error', $e->getMessage());
+            return view('error.default', ['status' => StatusCode::HTTP_STATUS_FORBIDDEN, 'message' => $e->getMessage()]); // Use StatusCode::HTTP_STATUS_FORBIDDEN
         } catch (Exception $e) {
-            log::error($e->getMessage());
-            return view('home');
+            Log::error($e->getMessage());
+            session()->flash('error', $e->getMessage());
+            return view('error.default', ['status' => StatusCode::HTTP_STATUS_NOT_FOUND, 'message' => $e->getMessage()]); // Use StatusCode::HTTP_STATUS_NOT_FOUND
         }
     }
 
-    public function editRole($id) {
+    public function editRole($id)
+    {
         try {
+
             $role = $this->_roleService->findRoleById($id);
-            log::info("edit role of id {$id}");
+            Log::info("edit role of id {$id}");
             return view('roles.edit', compact('role'));
-        } catch (Exception $e) {
-            log::error($e->getMessage());
+        } catch (AuthorizationException $e) {
+            Log::error($e->getMessage());
             session()->flash('error', $e->getMessage());
-            return view('home');
+            return view('error.default', ['status' => StatusCode::HTTP_STATUS_FORBIDDEN, 'message' => $e->getMessage()]); // Use StatusCode::HTTP_STATUS_FORBIDDEN
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            session()->flash('error', $e->getMessage());
+            return view('error.default', ['status' => StatusCode::HTTP_STATUS_NOT_FOUND, 'message' => $e->getMessage()]); // Use StatusCode::HTTP_STATUS_NOT_FOUND
         }
     }
 }

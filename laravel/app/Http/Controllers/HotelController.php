@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Services\HotelService;
 use App\Services\CityService;
 use Illuminate\Http\Request;
+use App\Common\StatusCode;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use Exception;
@@ -13,10 +15,10 @@ use Exception;
 class HotelController extends Controller
 {
     protected HotelService $_hotelService;
+    protected CityService $_cityService;
 
     public function __construct(HotelService $hotelService, CityService $cityService)
     {
-        // $this->middleware('auth');
         $this->_hotelService = $hotelService;
         $this->_cityService = $cityService;
     }
@@ -35,10 +37,18 @@ class HotelController extends Controller
                 ]);
             }
             return view('hotels.index', compact('hotels', 'cities'));
+        } catch (AuthorizationException $e) {
+            Log::warning('Unauthorized access: ' . $e->getMessage());
+            return view('error.default', [
+                'status' => StatusCode::HTTP_STATUS_FORBIDDEN,
+                'message' => $e->getMessage()
+            ]);
         } catch (Exception $e) {
-            log::error($e->getMessage());
-            session()->flash('error', $e->getMessage());
-            abort(404);
+            Log::error($e->getMessage());
+            return view('error.default', [
+                'status' => StatusCode::HTTP_STATUS_NOT_FOUND,
+                'message' => $e->getMessage()
+            ]);
         }
     }
 
@@ -46,39 +56,62 @@ class HotelController extends Controller
     {
         try {
             $cities = $this->_cityService->getAll();
-            log::info('create hotel');
+            Log::info('Create hotel');
             return view('hotels.create', compact('cities'));
+        } catch (AuthorizationException $e) {
+            Log::warning('Unauthorized access: ' . $e->getMessage());
+            return view('error.default', [
+                'status' => StatusCode::HTTP_STATUS_FORBIDDEN,
+                'message' => $e->getMessage()
+            ]);
         } catch (Exception $e) {
-            log::error($e->getMessage());
-            session()->flash('error', $e->getMessage());
-            abort(404);
+            Log::error($e->getMessage());
+            return view('error.default', [
+                'status' => StatusCode::HTTP_STATUS_NOT_FOUND,
+                'message' => $e->getMessage()
+            ]);
         }
     }
 
-    public function viewHotel($hotel_id) 
+    public function viewHotel($hotel_id)
     {
         try {
             $hotel = $this->_hotelService->findHotelById($hotel_id);
-            log::info("view hotel with id {$hotel_id}");
+            Log::info("View hotel with id {$hotel_id}");
             return view('hotels.view', compact('hotel'));
+        } catch (AuthorizationException $e) {
+            Log::warning('Unauthorized access: ' . $e->getMessage());
+            return view('error.default', [
+                'status' => StatusCode::HTTP_STATUS_FORBIDDEN,
+                'message' => $e->getMessage()
+            ]);
         } catch (Exception $e) {
-            log::error($e->getMessage());
-            session()->flash('error', $e->getMessage());
-            $status = 404;
-            $message = $e->getMessage();
-            return view('error.default', compact(['status', 'message']));
+            Log::error($e->getMessage());
+            return view('error.default', [
+                'status' => StatusCode::HTTP_STATUS_NOT_FOUND,
+                'message' => $e->getMessage()
+            ]);
         }
     }
 
-    public function editHotel($hotel_id) {
+    public function editHotel($hotel_id)
+    {
         try {
             $cities = $this->_cityService->getAll();
             $hotel = $this->_hotelService->findHotelById($hotel_id);
             return view('hotels.edit', compact('hotel', 'cities'));
+        } catch (AuthorizationException $e) {
+            Log::warning('Unauthorized access: ' . $e->getMessage());
+            return view('error.default', [
+                'status' => StatusCode::HTTP_STATUS_FORBIDDEN,
+                'message' => $e->getMessage()
+            ]);
         } catch (Exception $e) {
-            log::error($e->getMessage());
-            session()->flash('error', $e->getMessage());
-            abort(404);
+            Log::error($e->getMessage());
+            return view('error.default', [
+                'status' => StatusCode::HTTP_STATUS_NOT_FOUND,
+                'message' => $e->getMessage()
+            ]);
         }
     }
 }

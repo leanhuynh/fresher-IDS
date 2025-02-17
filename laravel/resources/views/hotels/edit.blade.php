@@ -117,23 +117,22 @@
     $(document).ready(function() {
         $("#saveBtn").click(function () {
             // Kiểm tra nếu các trường bắt buộc bị bỏ trống
-            if ($("#name_en").val().trim() === "" || 
-                $("#name_jp").val().trim() === "" || 
-                $("#city_id").val().trim() === "" || 
-                $("#company_name").val().trim() === "" || 
-                $("#email").val().trim() === "" || 
-                $("#telephone").val().trim() === "" || 
-                $("#address_1").val().trim() === "") {
+            // if ($("#name_en").val().trim() === "" || 
+            //     $("#name_jp").val().trim() === "" || 
+            //     $("#city_id").val().trim() === "" || 
+            //     $("#company_name").val().trim() === "" || 
+            //     $("#email").val().trim() === "" || 
+            //     $("#telephone").val().trim() === "" || 
+            //     $("#address_1").val().trim() === "") {
                 
-                Swal.fire({
-                    icon: "error",
-                    title: "Oops...",
-                    text: "Please enter all required fields!",
-                    confirmButtonText: "Yes, I understand!",
-                });
-                return;
-            }
-
+            //     Swal.fire({
+            //         icon: "error",
+            //         title: "Oops...",
+            //         text: "Please enter all required fields!",
+            //         confirmButtonText: "Yes, I understand!",
+            //     });
+            //     return;
+            // }
 
             // Thu thập dữ liệu từ form
             let formData = new FormData();

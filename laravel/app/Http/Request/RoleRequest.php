@@ -1,19 +1,23 @@
 <?php
 
 namespace App\Http\Request;
+
 use Illuminate\Foundation\Http\FormRequest;
 
-class RoleRequest extends FormRequest {
-
+class RoleRequest extends FormRequest
+{
     public function authorize()
     {
-        return true; // Cho phép mọi request
+        return true;
     }
 
     public function rules()
     {
         return [
-            'name' => 'required|string|max:255|unique:App\Models\Role,name,' . $this->route('role'),
+            'name' => [
+                'required', 'string', 'max:255',
+                'unique:\App\Models\Role,name,' . $this->route('role')
+            ],
             'description' => 'nullable|string|max:255'
         ];
     }
@@ -21,8 +25,13 @@ class RoleRequest extends FormRequest {
     public function messages()
     {
         return [
-            'name.required' => '',
-            'description.required' => ''
+            'name.required' => __('validation.required'),
+            'name.string' => __('validation.string'),
+            'name.max' => __('validation.max', ['max' => 255]),
+            'name.unique' => __('validation.unique'),
+
+            'description.string' => __('validation.string'),
+            'description.max' => __('validation.max', ['max' => 255])
         ];
     }
 }

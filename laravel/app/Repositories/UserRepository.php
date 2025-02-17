@@ -9,6 +9,7 @@ use App\Models\Role;
 use App\Models\Hotel;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
+use Illuminate\Auth\Access\AuthorizationException;
 use Exception;
 
 class UserRepository implements UserRepositoryInterface 
@@ -83,12 +84,13 @@ class UserRepository implements UserRepositoryInterface
             if (isset($data['role_id']) && !empty($data['role_id'])) {
 
                 // trường hợp user đang login là members
-                if ($auth->role->name !== Constant::ADMIN_ROLE_NAME) {
-                    throw new Exception(__('exceptions.permission.role'));
+                // và actor muốn thay đổi profile của người khác
+                if ($auth->role->name !== Constant::ADMIN_ROLE_NAME && $auth->id !== $user->id) {
+                    throw new AuthorizationException(__('exceptions.permission.role'));
                 } else {
                     // nếu có sự thay đổi role và user cần thay đổi là admin
                     if ($data['role_id'] != $user->role->id && $user->role->name === Constant::ADMIN_ROLE_NAME) {
-                        throw new Exception(__('exceptions.permission.role'));
+                        throw new AuthorizationException(__('exceptions.permission.role'));
                     }
                 }
 
@@ -120,6 +122,8 @@ class UserRepository implements UserRepositoryInterface
             $user->save();
 
             return $user;
+        } catch (AuthorizationException $e) {
+            throw $e;
         } catch (ModelNotFoundException $e) {
             throw new Exception('User not found with ID: ' . $id);
         } catch (QueryException $e) {
@@ -140,11 +144,13 @@ class UserRepository implements UserRepositoryInterface
             // check exist hotel with owner_id is user_id
             $hotels = Hotel::where('owner_id', $id)->get();
             if ($hotels->count() > 0) {
-                throw new Exception(__('exceptions.user.delete.hotel'));
+                throw new AuthorizationException(__('exceptions.user.delete.hotel'));
             }
 
             $user->delete();
             return true;
+        } catch (AuthorizationException $e) {
+            throw $e;
         } catch (ModelNotFoundException $e) {
             throw new ModelNotFoundException($e->getMessage());
         } catch (QueryException $e) {
@@ -187,7 +193,7 @@ class UserRepository implements UserRepositoryInterface
 
             return $user;
         } catch (ModelNotFoundException $e) {
-            throw new ModelNotFoundException($e->getMessage());
+            throw $e;
         } catch (QueryException $e) {
             throw new Exception("Database query error: " . $e->getMessage());
         } catch (Exception $e) {

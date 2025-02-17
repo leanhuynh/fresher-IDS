@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Common\Constant;
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Auth\Access\AuthorizationException;
 use Exception;
 
 class RoleRepository implements RoleRepositoryInterface 
@@ -50,6 +51,8 @@ class RoleRepository implements RoleRepositoryInterface
             }
             
             return $newRole;
+        } catch (\Illuminate\Database\QueryException $e) {
+            throw new Exception('Database has some errors!!');
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
@@ -64,6 +67,8 @@ class RoleRepository implements RoleRepositoryInterface
 
             $role->save();
             return $role;
+        } catch (\Illuminate\Database\QueryException $e) {
+            throw new Exception('Database query error: ' . $e->getMessage());
         } catch (Exception $e) {
             throw new Exception(__('exceptions.database.update'));
         }
@@ -81,8 +86,8 @@ class RoleRepository implements RoleRepositoryInterface
 
             $roles = $query->paginate(Constant::PAGINATE_DEFAULT)->appends($filters);
 
-            return $roles;
-        } catch (QueryException $e) {
+            return $roles;  
+        } catch (\Illuminate\Database\QueryException $e) {
             throw new Exception('Database query error: ' . $e->getMessage());
         } catch (Exception $e) {
             throw new Exception('An unexpected error occurred: ' . $e->getMessage());
@@ -104,7 +109,7 @@ class RoleRepository implements RoleRepositoryInterface
                 throw \Illuminate\Database\Eloquent\ModelNotFoundException('Errors in the auth user!!');
             }
             if ($auth->role->name !== Constant::ADMIN_ROLE_NAME) {
-                throw new Exception('You do not have permission to delete this role!');
+                throw new AuthorizationException('You do not have permission to delete this role!');
             }
 
             // check if exists user with role
@@ -114,11 +119,13 @@ class RoleRepository implements RoleRepositoryInterface
             }
 
             if ($auth->role->name !== Constant::ADMIN_ROLE_NAME) {
-                throw new Exception('You do not have permission to delete this role!');
+                throw new AuthorizationException('You do not have permission to delete this role!');
             }
 
             $role->delete();
             return $role;
+        } catch (AuthorizationException $e) {
+            throw $e;
         } catch (\Illuminate\ModelNotFoundException $e) {
             throw $e;
         } catch (\Illuminate\Database\QueryException $e) {

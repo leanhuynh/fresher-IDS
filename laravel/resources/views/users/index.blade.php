@@ -60,7 +60,7 @@
                 <td>{{$user->role->name}}</td>
                 <td>
                     <div class="d-flex flex-column" style="gap: 5px">
-                        <button class="btn btn-warning btn-sm" onclick="window.location.href='/users/edit/{{$user->id}}'">
+                        <button class="btn btn-warning btn-sm" onclick="window.location.href='{{ $user->id == auth()->id() ? '/users/profile' : '/users/edit/' . $user->id }}'">
                             <i class="fas fa-edit"></i> Edit
                         </button>
                         <button class="btn btn-danger btn-sm" data-id="{{$user->id}}">

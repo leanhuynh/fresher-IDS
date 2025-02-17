@@ -26,10 +26,10 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::prefix('/users')->middleware('auth')->group(function() {
-    Route::get('/', [UserController::class, 'index'])->name('users.index');
-    Route::get('/create', [UserController::class, 'createUser'])->name('users.createUser');
+    Route::get('/', [UserController::class, 'index'])->name('users.index')->middleware('admin');
+    Route::get('/create', [UserController::class, 'createUser'])->name('users.createUser')->middleware('admin');
     Route::get('/profile', [UserController::class, 'viewUserProfileById'])->name('users.getProfile');
-    Route::get('/edit/{user}', [UserController::class, 'editUserProfileById'])->name('users.editProfile');
+    Route::get('/edit/{user}', [UserController::class, 'editUserProfileById'])->name('users.editProfile')->middleware('admin');
 });
 
 Route::prefix('/hotels')->middleware('auth')->group(function() {
@@ -39,7 +39,7 @@ Route::prefix('/hotels')->middleware('auth')->group(function() {
     Route::get('/edit/{hotel}', [HotelController::class, 'editHotel'])->name('hotels.editHotel');
 });
 
-Route::prefix('/roles')->middleware('auth')->group(function() {
+Route::prefix('/roles')->middleware(['auth', 'admin'])->group(function() {
     Route::get('/', [RoleController::class, 'index'])->name('roles.index');
     Route::get('/create', [RoleController::class, 'createRole'])->name('roles.createRole');
     Route::get('/edit/{role}', [RoleController::class, 'editRole'])->name('roles.editRole');

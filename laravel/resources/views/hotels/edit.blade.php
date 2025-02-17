@@ -30,7 +30,7 @@
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label" for="hotel_code">Hotel Code</label>
+                        <label class="form-label">Hotel Code (6 Digits)<span style="color:red">*</span></label>
                         <input type="text" class="form-control" id="hotel_code" name="hotel_code" value="{{ $hotel->hotel_code ?? '' }}" placeholder="Enter hotel code">
                     </div>
                 </div>

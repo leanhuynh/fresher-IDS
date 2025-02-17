@@ -17,7 +17,7 @@ return new class extends Migration
             'first_name' => 'admin',
             'last_name' => 'admin',
             'user_name' => 'admin',
-            'email' => 'admin@example.com',
+            'email' => 'admin@gmail.com',
             'password' => Hash::make('admin'),
             'role_id' => 1,
             'created_at' => now(),
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        DB::table('users')->where('email', 'admin@example.com')->delete();
+        DB::table('users')->where('email', 'admin@gmail.com')->delete();
     }
 };

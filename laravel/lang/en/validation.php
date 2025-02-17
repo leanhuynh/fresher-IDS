@@ -183,7 +183,7 @@ return [
 
     'avatar' => [
         'image' => 'File must be image',
-        'max' => 'The size is not bigger than 2MB'
+        'max' => 'The size of :attribute is not bigger than :max'
     ],
 
     'name' => [

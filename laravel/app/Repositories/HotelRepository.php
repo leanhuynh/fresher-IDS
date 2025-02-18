@@ -9,6 +9,8 @@ use App\Common\Constant;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
+use \Illuminate\Database\Eloquent\ModelNotFoundException;
+use \Illuminate\Database\QueryException;
 use Exception;
 
 class HotelRepository implements HotelRepositoryInterface 
@@ -23,8 +25,25 @@ class HotelRepository implements HotelRepositoryInterface
     public function getHotelsByOwnerId($owner_id) 
     {
         try {
-            $hotels = $this->_model::with(['user', 'city'])->where('owner_id', $owner_id)->orderby('name_en', 'asc')->paginate(Constant::PAGINATE_DEFAULT);
+            $owner = User::with('role')->find($owner_id);
+            if (empty($owner)) {
+                throw new ModuleNotFoundException('Not found owner information.');
+            }
+
+            // thực thi câu truy vấn
+            $query = $this->_model::query()->with(['user', 'city']);
+
+            // nếu role của người dùng hiện tại không phải là Admin
+            if ($owner->role->name !== Constant::ADMIN_ROLE_NAME) {
+                $query->where('owner_id', $owner_id);
+            }
+
+            $hotels = $query->orderby('name_en', 'asc')->paginate(Constant::PAGINATE_DEFAULT);
             return $hotels;
+        } catch (ModuleNotFoundException $e) {
+            throw $e;
+        } catch (QueryException $e) {
+            throw $e;
         } catch(Exception $e) {
             throw new Exception('database has some errors!!');
         }
@@ -32,11 +51,17 @@ class HotelRepository implements HotelRepositoryInterface
 
     public function findHotelById($hotel_id, $owner_id) {
         try {
+            $owner = User::with('role')->find($owner_id);
+            if (empty($owner)) {
+                throw new \Illuminate\Database\Eloquent\ModelNotFoundException('Not found author!');
+            }
+
             // Lấy thông tin của hotel theo id
             $hotel = $this->_model::with('city')->findOrFail($hotel_id);
 
             // Kiểm tra xem user có quyền truy cập hotel này không
-            if ($hotel->owner_id != $owner_id) {
+            if ($owner->role->name !== Constant::ADMIN_ROLE_NAME && 
+                    $hotel->owner_id != $owner_id) {
                 throw new AuthorizationException("You don't have permissions to do this actions!!");
             }
 

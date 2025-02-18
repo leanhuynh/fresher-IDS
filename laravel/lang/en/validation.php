@@ -202,5 +202,13 @@ return [
         'nullable' => 'Password can not be empty',
         'min' => 'Password must contain at least 8 characters',
         'confirmed' => 'Confirm password not correct'
+    ],
+
+    'telephone' => [
+        'regex' => "The :attribute format is invalid."
+    ],
+
+    'fax' => [
+        'regrex' => 'The :attribute format is invalid.'
     ]
 ];

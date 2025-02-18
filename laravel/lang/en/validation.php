@@ -210,5 +210,9 @@ return [
 
     'fax' => [
         'regrex' => 'The :attribute format is invalid.'
+    ],
+
+    'database' => [
+        'exists' => 'The :attribute value is not exists in database :database.',
     ]
 ];

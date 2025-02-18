@@ -3,16 +3,31 @@
 return [
     'database' => [
         'update' => 'database has some errors when updating record!!',
-        'error' => 'database has some errors!'
+        'error' => 'database has some errors!!'
     ],
 
     'search' => [
         'id' => 'not found id!',
     ],
 
-    'not_found' => 'Not found: ',
+    'not_found' => [
+        'role' => 'Not found role!!',
+        'hotel' => 'Not found hotel!!',
+        'user' => 'Not found user!!',
+        'auth' => 'Not found auth!!',
+        'owner' => 'Not found owner!!',
+        'password' => 'The password field is required.',
+    ],
+
+    'exist' => [
+        'role' => 'Role exists in database!!',
+        'hotel' => 'Hotel exists in database!!',
+        'user' => 'User exists in database!!',
+    ],
 
     'unexpected' => 'An unexpected error occurred: ',
+
+    'unknown' => 'An unknown error occured!!',
 
     'permission' => [
         'action' => [

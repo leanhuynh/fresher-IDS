@@ -10,6 +10,7 @@ use App\Models\Hotel;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Validation\ValidationException;
 use Exception;
 
 class UserRepository implements UserRepositoryInterface 
@@ -30,11 +31,16 @@ class UserRepository implements UserRepositoryInterface
     public function findUserById($id) {
         try {
             $user = $this->_model::with('role')->findorFail($id);
+            if (empty($user)) {
+                throw new ModuleNotFoundException(__('exceptions.not_found.user'));
+            }
             return $user;
         } catch (ModelNotFoundException $e) {
-            throw new ModelNotFoundException("User not found with ID: " . $id);
+            throw $e;
+        } catch (QueryException $e) {
+            throw new QueryException(__('exceptions.database.error'));
         } catch (Exception $e) {
-            throw new Exception($e->getMessage());
+            throw new Exception(__('exceptions.unknown'));
         }
     }
 
@@ -42,7 +48,7 @@ class UserRepository implements UserRepositoryInterface
         try {
             // nếu data không có key 'password' hoặc là field password rỗng
             if (!isset($data['password']) || empty($data['password'])) {
-                throw new Exception('The password field is required.');
+                throw new ValidationException(__('exceptions.not_found.password'));
             }
 
             // save avatar
@@ -69,10 +75,12 @@ class UserRepository implements UserRepositoryInterface
             ]);
 
             return $newUser;
-        } catch (QueryException $e) {
-            throw new Exception("Database query error: " . $e->getMessage());
-        } catch (Exception $e) {
+        } catch (ValidationException $e) { // bắt sự kiện chưa có password
             throw $e;
+        } catch (QueryException $e) {
+            throw new QueryException(__('exceptions.database.error'));
+        } catch (Exception $e) {
+            throw new Exception(__('exceptions.unknown'));
         }
     }
 
@@ -130,11 +138,11 @@ class UserRepository implements UserRepositoryInterface
         } catch (AuthorizationException $e) {
             throw $e;
         } catch (ModelNotFoundException $e) {
-            throw new Exception('User not found with ID: ' . $id);
+            throw $e;
         } catch (QueryException $e) {
-            throw new Exception("Database query error: " . $e->getMessage());
+            throw new QueryException(__('exceptions.database.error'));
         } catch (Exception $e) {
-            throw new Exception("An unexpected error occurred: " . $e->getMessage());
+            throw new Exception(__('exceptions.unknown'));
         }
     }
 
@@ -142,8 +150,8 @@ class UserRepository implements UserRepositoryInterface
         try {
             // check exist user
             $user = $this->_model::find($id);
-            if (!$user) {
-                throw new ModelNotFoundException("User with ID {$id} not found.");
+            if (empty($user)) {
+                throw new ModelNotFoundException(__('exceptions.not_found.user'));
             }
 
             // check exist hotel with owner_id is user_id
@@ -157,11 +165,11 @@ class UserRepository implements UserRepositoryInterface
         } catch (AuthorizationException $e) {
             throw $e;
         } catch (ModelNotFoundException $e) {
-            throw new ModelNotFoundException($e->getMessage());
+            throw $e;
         } catch (QueryException $e) {
-            throw new Exception("Database query error: " . $e->getMessage());
+            throw new QueryException(__('exceptions.database.error'));
         } catch (Exception $e) {
-            throw new Exception("An unexpected error occurred: " . $e->getMessage());
+            throw new Exception(__('exceptions.unknown'));
         }
     }
 
@@ -181,9 +189,9 @@ class UserRepository implements UserRepositoryInterface
 
             return $users;
         } catch (QueryException $e) {
-            throw new Exception('Database query error: ' . $e->getMessage());
+            throw new QueryException(__('exceptions.database.error'));
         } catch (Exception $e) {
-            throw new Exception('An unexpected error occurred: ' . $e->getMessage());
+            throw new Exception(__('exceptions.unknown'));
         }
     }
 
@@ -192,17 +200,17 @@ class UserRepository implements UserRepositoryInterface
         try {
             $user = $this->_model::with('role')->where('id', $id)->first();
 
-            if (!$user) {
-                throw new ModelNotFoundException("User with ID {$id} not found.");
+            if (empty($user)) {
+                throw new ModelNotFoundException(__('exceptions.not_found.user'));
             }
 
             return $user;
         } catch (ModelNotFoundException $e) {
             throw $e;
         } catch (QueryException $e) {
-            throw new Exception("Database query error: " . $e->getMessage());
+            throw new QueryException(__('exceptions.database.error'));
         } catch (Exception $e) {
-            throw new Exception("An unexpected error occurred: " . $e->getMessage());
+            throw new Exception(__('exceptions.unknown'));
         }
     }
 }

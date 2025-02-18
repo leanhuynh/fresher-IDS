@@ -9,6 +9,10 @@ use App\Common\Constant;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\QueryException;
+use Illuminate\Validation\ValidationException;
+use Illuminate\ModelNotFoundException;
+use App\Exceptions\RoleInUseException;
 use Exception;
 
 class RoleRepository implements RoleRepositoryInterface 
@@ -35,26 +39,21 @@ class RoleRepository implements RoleRepositoryInterface
         try {
             $role = $this->_model::find($data['name']);
             if ($role) {
-                throw new Exception("the {$data['name']} role already exists in the database!!");
+                throw new ValidationException(__('exceptions.exist.role'));
             }
 
-            $newRole = NULL;
-
-            try {
-                $newRole = $this->_model::create([
-                    'name' => $data['name'],
-                    'description' => $data['description'],
-                ]);
-
-            } catch (Exception $e) {
-                throw new Exception('input values or database has some values!!');
-            }
+            $newRole = $this->_model::create([
+                'name' => $data['name'],
+                'description' => $data['description'],
+            ]);
             
             return $newRole;
-        } catch (\Illuminate\Database\QueryException $e) {
-            throw new Exception('Database has some errors!!');
+        } catch (ValidationException $e) {
+            throw $e;
+        } catch (QueryException $e) {
+            throw new QueryException(__('exceptions.database.error'));
         } catch (Exception $e) {
-            throw new Exception($e->getMessage());
+            throw new Exception(__('exceptions.unknown'));
         }
     }
 
@@ -67,10 +66,10 @@ class RoleRepository implements RoleRepositoryInterface
 
             $role->save();
             return $role;
-        } catch (\Illuminate\Database\QueryException $e) {
-            throw new Exception('Database query error: ' . $e->getMessage());
+        } catch (QueryException $e) {
+            throw new QueryException(__('exceptions.database.error'));
         } catch (Exception $e) {
-            throw new Exception(__('exceptions.database.update'));
+            throw new Exception(__('exceptions.unknown'));
         }
     }
 
@@ -87,10 +86,10 @@ class RoleRepository implements RoleRepositoryInterface
             $roles = $query->paginate(Constant::PAGINATE_DEFAULT)->appends($filters);
 
             return $roles;  
-        } catch (\Illuminate\Database\QueryException $e) {
-            throw new Exception('Database query error: ' . $e->getMessage());
+        } catch (QueryException $e) {
+            throw new QueryException(__('exceptions.database.error'));
         } catch (Exception $e) {
-            throw new Exception('An unexpected error occurred: ' . $e->getMessage());
+            throw new Exception(__('exceptions.unknown'));
         }
     }
 
@@ -100,38 +99,40 @@ class RoleRepository implements RoleRepositoryInterface
 
             // Check if the role exists
             if (!$role) {
-                throw \Illuminate\Database\Eloquent\ModelNotFoundException('Role not found');
+                throw new ModelNotFoundException(__('exceptions.not_found.role'));
             }
             
             // check if the user has permission to delete the role
             $auth = User::with('role')->find($auth_id);
-            if (!$auth) {
-                throw \Illuminate\Database\Eloquent\ModelNotFoundException('Errors in the auth user!!');
+            if (empty($auth)) {
+                throw new ModelNotFoundException(__('exceptions.not_found.user'));
             }
             if ($auth->role->name !== Constant::ADMIN_ROLE_NAME) {
-                throw new AuthorizationException('You do not have permission to delete this role!');
+                throw new AuthorizationException(__('exceptions.permission.delete.user'));
             }
 
             // check if exists user with role
             $users = User::where('role_id', $role->id)->get();
             if ($users->count() > 0) {
-                throw new Exception('There are users with this role, you cannot delete this role!');
+                throw new RoleInUseException();
             }
 
             if ($auth->role->name !== Constant::ADMIN_ROLE_NAME) {
-                throw new AuthorizationException('You do not have permission to delete this role!');
+                throw new AuthorizationException(__('exceptions.permission.delete.role'));
             }
 
             $role->delete();
             return $role;
+        } catch (RoleInUseException $e) {
+            throw $e;
         } catch (AuthorizationException $e) {
             throw $e;
-        } catch (\Illuminate\ModelNotFoundException $e) {
+        } catch (ModelNotFoundException $e) {
             throw $e;
-        } catch (\Illuminate\Database\QueryException $e) {
-            throw new Exception('Database query error: ' . $e->getMessage());
+        } catch (QueryException $e) {
+            throw new QueryException(__('exceptions.database.error'));
         } catch (Exception $e) {
-            throw new Exception('An unexpected error occurred: ' . $e->getMessage());
+            throw new Exception(__('exceptions.unknown'));
         }
     }
 }

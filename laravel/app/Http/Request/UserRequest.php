@@ -35,7 +35,8 @@ class UserRequest extends FormRequest
     public function messages()
     {
         return [
-            'role_id.exists' => __('validation.exists'),
+            'role_id.exists' => __('validation.database.exists', ['database' => 'Role']),
+            'role_id.integer' => __('validation.integer'),
 
             'first_name.required' => __('validation.required'),
             'first_name.max' => __('validation.max'),
@@ -52,7 +53,7 @@ class UserRequest extends FormRequest
             'email.unique' => __('validation.unique'),
             'email.email' => __('validation.email'),
 
-            'password.nullable' => __('validation.nullable'),
+            // 'password.nullable' => __('validation.nullable'),
             'password.min' => __('validation.min'),
             'password.max' => __('validation.max'),
             'password.confirmed' => __('validation.confirmed'),

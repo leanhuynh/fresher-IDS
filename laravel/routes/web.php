@@ -35,8 +35,8 @@ Route::prefix('/users')->middleware('auth')->group(function() {
 Route::prefix('/hotels')->middleware('auth')->group(function() {
     Route::get('/create', [HotelController::class, 'createHotel'])->name('hotels.createHotel');
     Route::get('/', [HotelController::class, 'index'])->name('hotels.index');
-    Route::get('/view/{hotel}', [HotelController::class, 'viewHotel'])->name('hotels.viewHotel');
-    Route::get('/edit/{hotel}', [HotelController::class, 'editHotel'])->name('hotels.editHotel');
+    Route::get('/view/{hotel}', [HotelController::class, 'viewHotel'])->name('hotels.viewHotel')->middleware('hotel.owner');
+    Route::get('/edit/{hotel}', [HotelController::class, 'editHotel'])->name('hotels.editHotel')->middleware('hotel.owner');
 });
 
 Route::prefix('/roles')->middleware(['auth', 'admin'])->group(function() {

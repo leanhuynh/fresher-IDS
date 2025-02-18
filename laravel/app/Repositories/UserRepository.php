@@ -40,8 +40,8 @@ class UserRepository implements UserRepositoryInterface
 
     public function createUser(array $data) {
         try {
-            // check password
-            if (isset($data['password']) || empty($data['password'])) {
+            // nếu data không có key 'password' hoặc là field password rỗng
+            if (!isset($data['password']) || empty($data['password'])) {
                 throw new Exception('The password field is required.');
             }
 

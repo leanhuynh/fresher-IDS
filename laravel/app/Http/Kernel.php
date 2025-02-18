@@ -65,5 +65,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         // custom middleware
         'admin' => \App\Http\Middleware\CheckIfAdmin::class,
+        'hotel.owner' => \App\Http\Middleware\CheckHotelOwner::class,
     ];
 }

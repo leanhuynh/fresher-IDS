@@ -171,7 +171,7 @@
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
                 cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, back to previous page!"
+                confirmButtonText: "Yes, back to list roles page!"
                 }).then((result) => {
                     if (result.isConfirmed) {
                         window.history.back();

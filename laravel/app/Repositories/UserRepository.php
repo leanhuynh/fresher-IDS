@@ -23,7 +23,7 @@ class UserRepository implements UserRepositoryInterface
 
     // implement interface function
     public function getAll() {
-        $users = $this->_model::with('role')->paginate(Constant::PAGINATE_DEFAULT);
+        $users = $this->_model::with('role')->orderBy('user_name', 'asc')->paginate(Constant::PAGINATE_DEFAULT);
         return $users;
     }
 
@@ -176,7 +176,7 @@ class UserRepository implements UserRepositoryInterface
                     ->orWhere('email', 'LIKE', "%{$filters['keyword']}%");
                 });
             }
-
+            $query->orderBy('user_name', 'asc');
             $users = $query->paginate(Constant::PAGINATE_DEFAULT)->appends($filters);
 
             return $users;

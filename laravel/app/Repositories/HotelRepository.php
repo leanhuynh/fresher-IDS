@@ -23,7 +23,7 @@ class HotelRepository implements HotelRepositoryInterface
     public function getHotelsByOwnerId($owner_id) 
     {
         try {
-            $hotels = $this->_model::with(['user', 'city'])->where('owner_id', $owner_id)->paginate(Constant::PAGINATE_DEFAULT);
+            $hotels = $this->_model::with(['user', 'city'])->where('owner_id', $owner_id)->orderby('name_en', 'asc')->paginate(Constant::PAGINATE_DEFAULT);
             return $hotels;
         } catch(Exception $e) {
             throw new Exception('database has some errors!!');

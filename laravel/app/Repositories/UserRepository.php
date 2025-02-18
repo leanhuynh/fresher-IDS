@@ -40,6 +40,11 @@ class UserRepository implements UserRepositoryInterface
 
     public function createUser(array $data) {
         try {
+            // check password
+            if (isset($data['password']) || empty($data['password'])) {
+                throw new Exception('The password field is required.');
+            }
+
             // save avatar
             $imagePath = "";
             if (isset($data['avatar']) && !empty($data['avatar'])) {

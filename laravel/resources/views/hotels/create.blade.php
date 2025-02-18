@@ -67,7 +67,7 @@
                     </div>
                 </div>
                 <div class="mt-5 text-center">
-                    <button id="backBtn" class="btn btn-primary profile-button" type="button" onclick="window.history.back()">Back</button>
+                    <button id="cancelBtn" class="btn btn-secondary profile-button" type="button">Cancel</button>
                     <button id="saveBtn" class="btn btn-primary disabled profile-button" type="button">Save Hotel</button>
                 </div>
             </div>
@@ -145,26 +145,8 @@
 </script>
 <!-- AJAX -->
 <script>
-
     $(document).ready(function() {
         $('#saveBtn').on('click', function() {
-            // Kiểm tra nếu các trường bắt buộc bị bỏ trống
-            // if ($("#name_en").val().trim() === "" || 
-            //     $("#name_jp").val().trim() === "" || 
-            //     $("#city_id").val().trim() === "" || 
-            //     $("#company_name").val().trim() === "" || 
-            //     $("#email").val().trim() === "" || 
-            //     $("#telephone").val().trim() === "" || 
-            //     $("#address_1").val().trim() === "") {
-                
-            //     Swal.fire({
-            //         icon: "error",
-            //         title: "Oops...",
-            //         text: "Please enter all required fields!",
-            //         confirmButtonText: "Yes, I understand!",
-            //     });
-            //     return;
-            // }
 
             // get infor
             const values = {
@@ -204,6 +186,22 @@
                     },
                     error: function(xhr) {
                         customAlert(xhr?.responseJSON?.message ?? 'Create failed', 'error');
+                    }
+                });
+        });
+
+        $("#cancelBtn").click(function() {
+            Swal.fire({
+                title: "Hotel Management Alert",
+                text: "Are you sure to cancel the new hotel creation process?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, back to previous page!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.history.back();
                     }
                 });
         });

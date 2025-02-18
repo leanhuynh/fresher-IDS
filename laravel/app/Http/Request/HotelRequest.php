@@ -42,7 +42,9 @@ class HotelRequest extends FormRequest
             ],
             'tax_code' => [
                 'nullable', 'string',
-                'regex:/^\d{10,13}$/' // Mã số thuế chỉ chứa số và có độ dài từ 10 đến 13 ký tự
+                'min:10',        // Đảm bảo mã số thuế có ít nhất 10 ký tự
+                'max:13',        // Đảm bảo mã số thuế có không quá 13 ký tự
+                'regex:/^\d+$/', // Đảm bảo chỉ chứa các chữ số
             ],
             'address_1' => 'required|string|min:5|max:255',
             'address_2' => 'nullable|string|min:5|max:255',
@@ -52,31 +54,61 @@ class HotelRequest extends FormRequest
     public function messages()
     {
         return [
-            'role_id.exists' => __('validation.exists'),
+            'name_en.required' => __('validation.required'),
+            'name_en.string' => __('validation.string'),
+            'name_en.max' => __('validation.max'),
+            'name_en.unique' => __('validation.unique'),
+            'name_en.regex' => __('validation.regex'),
 
-            'first_name.required' => __('validation.required'),
-            'first_name.max' => __('validation.max'),
+            'name_jp.required' => __('validation.required'),
+            'name_jp.string' => __('validation.string'),
+            'name_jp.max' => __('validation.max'),
+            'name_jp.unique' => __('validation.unique'),
+            'name_jp.regex' => __('validation.regex'),
 
-            'last_name.required' => __('validation.required'),
-            'last_name.max' => __('validation.max'),
+            'city_id.required' => __('validation.required'),
+            'city_id.integer' => __('validation.integer'),
+            'city_id.exists' => __('validation.database.exists', ['database' => 'City']),
 
-            'user_name.required' => __('validation.required'),
-            'user_name.regex' => __('validation.regex'),
-            'user_name.unique' => __('validation.unique'),
-            'user_name.max' => __('validation.max'),
+            'owner_id.required' => __('validation.required'),
+            'owner_id.integer' => __('validation.integer'),
+            'owner_id.exists' => __('validation.exists'),
+
+            'hotel_code.required' => __('validation.required'),
+            'hotel_code.string' => __('validation.string'),
+            'hotel_code.size' => __('validation.size'),
+            'hotel_code.alpha_num' => __('validation.alpha_num'),
+            'hotel_code.unique' => __('validation.unique'),
+
+            'company_name.required' => __('validation.required'),
+            'company_name.string' => __('validation.string'),
+            'company_name.max' => __('validation.max'),
 
             'email.required' => __('validation.required'),
-            'email.unique' => __('validation.unique'),
             'email.email' => __('validation.email'),
 
-            'password.nullable' => __('validation.nullable'),
-            'password.min' => __('validation.min'),
-            'password.max' => __('validation.max'),
-            'password.confirmed' => __('validation.confirmed'),
-            'password.regex' => __('validation.regex'),
+            'telephone.required' => __('validation.required'),
+            'telephone.string' => __('validation.string'),
+            'telephone.regex' => __('validation.regex'),
 
-            'avatar.image' => __('validation.image'),
-            'avatar.max' => __('validation.max'),
+            'fax.nullable' => __('validation.nullable'),
+            'fax.string' => __('validation.string'),
+            'fax.max' => __('validation.max'),
+            'fax.regex' => __('validation.regex'),
+
+            // 'tax_code.nullable' => __('validation.nullable'),
+            'tax_code.string' => __('validation.string'),
+            'tax_code.regex' => __('validation.regex'),
+
+            'address_1.required' => __('validation.required'),
+            'address_1.string' => __('validation.string'),
+            'address_1.min' => __('validation.min'),
+            'address_1.max' => __('validation.max'),
+
+            'address_2.nullable' => __('validation.nullable'),
+            'address_2.string' => __('validation.string'),
+            'address_2.min' => __('validation.min'),
+            'address_2.max' => __('validation.max'),
         ];
     }
 }

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('first_name', 255); // Giới hạn 255 ký tự
             $table->string('last_name', 255); // Giới hạn 255 ký tự
-            $table->string('user_name', 255)->unique(); // Giới hạn 255 ký tự
+            $table->string('user_name', 50)->unique(); // Giới hạn 255 ký tự
             $table->string('email', 255)->unique(); // Giới hạn 255 ký tự
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password', 255); // Giới hạn 255 ký tự

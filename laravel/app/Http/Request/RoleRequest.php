@@ -27,11 +27,11 @@ class RoleRequest extends FormRequest
         return [
             'name.required' => __('validation.required'),
             'name.string' => __('validation.string'),
-            'name.max' => __('validation.max', ['max' => 255]),
+            'name.max' => __('validation.max'),
             'name.unique' => __('validation.unique'),
 
             'description.string' => __('validation.string'),
-            'description.max' => __('validation.max', ['max' => 255])
+            'description.max' => __('validation.max')
         ];
     }
 }

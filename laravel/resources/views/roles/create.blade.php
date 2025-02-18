@@ -174,7 +174,7 @@
                 confirmButtonText: "Yes, back to list roles page!"
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.history.back();
+                        window.location.href = '/roles';
                     }
                 });
         });

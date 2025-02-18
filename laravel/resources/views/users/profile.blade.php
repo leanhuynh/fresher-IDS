@@ -74,7 +74,7 @@
                             </div>
                         </div>
                         <div class="mt-5 text-center">
-                            <button id="backBtn" class="btn btn-primary profile-button" type="button" onclick="window.history.back()">Back</button>
+                            <button id="cancelBtn" class="btn btn-secondary profile-button" type="button">Cancel</button>
                             <button id="saveBtn" class="btn btn-primary disabled profile-button" type="button">Save Profile</button>
                         </div>
                     </div>
@@ -231,6 +231,7 @@
     }
 
     $(document).ready(function() {
+        // SAVE BUTTON
         $('#saveBtn').on('click', async function() {
             // get image
             const base64Image = $("#profileImage").attr('src');
@@ -289,6 +290,23 @@
                     },
                     error: function(xhr) {
                         customAlert(xhr?.responseJSON?.message ?? 'Update failed', 'error');
+                    }
+                });
+        });
+
+        // CANCEL BUTTON
+        $("#cancelBtn").click(function() {
+            Swal.fire({
+                title: "Hotel Management Alert",
+                text: "Are you sure to cancel the edit user profile process?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, back to list users page!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '/users';
                     }
                 });
         });

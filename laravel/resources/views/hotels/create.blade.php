@@ -201,7 +201,7 @@
                 confirmButtonText: "Yes, back to list hotels page!"
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.history.back();
+                        window.location.href = '/hotels';
                     }
                 });
         });

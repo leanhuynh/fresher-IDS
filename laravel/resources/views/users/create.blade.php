@@ -291,7 +291,7 @@
                 confirmButtonText: "Yes, back to list users page!"
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.history.back();
+                        window.location.href = '/users';
                     }
                 });
         });

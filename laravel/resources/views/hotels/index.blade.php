@@ -55,8 +55,7 @@
                     <td>{{$hotels->firstItem() + $index}}</td>
                     <td>{{$hotel->city->name}}</td>
                     <td>
-                        {{$hotel->hotel_code}}
-                        {{-- <span class="badge bg-success">Skyhub</span> --}}
+                        <span class="badge bg-success">{{$hotel->hotel_code}}</span>
                     </td>
                     <td>{{$hotel->name_en}}</td>
                     <td>{{$hotel->email}}</td>
@@ -230,7 +229,7 @@
                         <tr ondblclick="window.location.href='/hotels/edit/${hotel.id}'">
                             <td>${startIndex + index}</td>
                             <td>${hotel.city.name || ''}</td>
-                            <td>${hotel.hotel_code || ''}</td>
+                            <td><span class="badge bg-success">${hotel.hotel_code || ''}</span></td>
                             <td>${hotel.name_en || ''}</td>
                             <td>${hotel.email || ''}</td>
                             <td>${hotel.telephone || ''}</td>

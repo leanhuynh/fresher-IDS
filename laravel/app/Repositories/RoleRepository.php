@@ -108,7 +108,7 @@ class RoleRepository implements RoleRepositoryInterface
                 throw new ModelNotFoundException(__('exceptions.not_found.user'));
             }
             if ($auth->role->name !== Constant::ADMIN_ROLE_NAME) {
-                throw new AuthorizationException(__('exceptions.permission.delete.user'));
+                throw new AuthorizationException(__('exceptions.permission.action.delete.user'));
             }
 
             // check if exists user with role
@@ -118,7 +118,7 @@ class RoleRepository implements RoleRepositoryInterface
             }
 
             if ($auth->role->name !== Constant::ADMIN_ROLE_NAME) {
-                throw new AuthorizationException(__('exceptions.permission.delete.role'));
+                throw new AuthorizationException(__('exceptions.permission.action.delete.role'));
             }
 
             $role->delete();

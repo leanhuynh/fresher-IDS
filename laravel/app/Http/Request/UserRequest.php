@@ -22,7 +22,7 @@ class UserRequest extends FormRequest
                 'regex:/^[a-zA-Z0-9._]+$/',
                 'unique:\App\Models\User,user_name,' . $this->route('user')
             ],
-            'email' => 'required|email|unique:\App\Models\User,email,' . $this->route('user'),
+            'email' => 'required|email|max:255|unique:\App\Models\User,email,' . $this->route('user'),
             'address' => 'nullable|string|max:255',
             'password' => [
                 'nullable', 'string', 'min:8', 'max:16', 'confirmed',
@@ -50,6 +50,7 @@ class UserRequest extends FormRequest
             'user_name.max' => __('validation.max'),
 
             'email.required' => __('validation.required'),
+            'email.max' => __('validation.max'),
             'email.unique' => __('validation.unique'),
             'email.email' => __('validation.email'),
 

@@ -15,7 +15,6 @@
         @csrf
         <div class="modal-body">
             <div class="row">
-                <!-- <input type="file" name="avatar" id="avatar"> -->
                 <div class="col-md-3 border-right">
                     <div class="d-flex flex-column align-items-center text-center p-3 py-5">
                         <img id="profileImage" class="rounded-circle profile-pic mt-5" width="150px" 
@@ -99,8 +98,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <button type="button" class="btn btn-primary" id="saveImage">Lưu Ảnh</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="saveImage">Save Image</button>
             </div>
         </div>
     </div>
@@ -181,6 +180,7 @@
     document.getElementById("saveImage").addEventListener("click", function() {
         // activate button "Save Profile"
         saveButton.classList.remove('disabled');
+        saveButton.removeAttribute("disabled");
         let previewImage = document.getElementById("previewImage");
         if (previewImage.src) {
             const base64Image = previewImage.src;
@@ -192,11 +192,6 @@
 </script>
 <!-- AJAX -->
 <script>
-    async function urlToFile(url, filename) {
-        const response = await fetch(url);
-        const blob = await response.blob();
-        return new File([blob], filename, { type: blob.type });
-    }
 
     function base64ToFile(base64, fileName) {
         try {

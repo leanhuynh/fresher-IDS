@@ -27,7 +27,7 @@ return [
 
     'unexpected' => 'An unexpected error occurred: ',
 
-    'unknown' => 'An unknown error occured!!',
+    'unknown' => 'An unknown error occured: database or logic!!',
 
     'permission' => [
         'action' => [

@@ -8,7 +8,7 @@
         <div class="flex-grow-1">
             <label for="city" class="form-label">City</label>
             <select class="form-select" id="city_id" name="city_id">
-                <option value="">--Select City--</option>
+                <option value="">--All--</option>
                 @foreach ($cities as $city)
                     <option value="{{ $city->id }}">{{ $city->name }}</option>
                 @endforeach

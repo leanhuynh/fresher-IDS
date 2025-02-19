@@ -65,7 +65,7 @@ class HotelRepository implements HotelRepositoryInterface
             // Kiểm tra xem user có quyền truy cập hotel này không
             if ($owner->role->name !== Constant::ADMIN_ROLE_NAME && 
                     $hotel->owner_id != $owner_id) {
-                throw new AuthorizationException(__('exceptions.permission.view.hotel'));
+                throw new AuthorizationException(__('exceptions.permission.action.view.hotel'));
             }
 
             return $hotel;
@@ -158,6 +158,8 @@ class HotelRepository implements HotelRepositoryInterface
         try {
             // Lấy thông tin của hotel theo id
             $hotel = $this->_model::findOrFail($hotel_id);
+            $owner_id = $data['owner_id'];
+            $owner = User::with('role')->find($owner_id);
 
             // Kiểm tra xem hotel có tồn tại không
             if (empty($hotel)) {
@@ -165,8 +167,8 @@ class HotelRepository implements HotelRepositoryInterface
             }
 
             // Kiểm tra xem user có quyền truy cập hotel này không
-            if ($hotel->owner_id != $data['owner_id']) {
-                throw new AuthorizationException(__('exceptions.permission.edit.hotel'));
+            if ($owner->role->name !== Constant::ADMIN_ROLE_NAME && $hotel->owner_id != $data['owner_id']) {
+                throw new AuthorizationException(__('exceptions.permission.action.edit.hotel'));
             }
 
             // Cập nhật thông tin mới
@@ -215,7 +217,7 @@ class HotelRepository implements HotelRepositoryInterface
             if ($owner->role->name !== Role::ADMIN_ROLE_NAME) {
                 // Kiểm tra xem user có quyền truy cập hotel này không
                 if ($hotel->owner_id != $owner_id) {
-                    throw new AuthorizationException(__('exceptions.permission.delete.hotel'));
+                    throw new AuthorizationException(__('exceptions.permission.action.delete.hotel'));
                 }            
             }
 

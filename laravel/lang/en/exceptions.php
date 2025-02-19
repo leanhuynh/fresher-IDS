@@ -17,6 +17,7 @@ return [
         'auth' => 'Not found auth!!',
         'owner' => 'Not found owner!!',
         'password' => 'The password field is required.',
+        'admin' => 'The admin role is not found.',
     ],
 
     'exist' => [

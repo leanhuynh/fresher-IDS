@@ -43,7 +43,7 @@
                                 <input id="user_name" type="text" class="form-control" value="{{$user->user_name}}" placeholder="user name">
                             </div>
                             <div class="col-md-6">
-                                <label class="labels">Role <span class="text-danger">*</span></label>
+                                <label class="labels">Role (Default is Admin) <span style="color:red">*</span></label>
                                 <select id="role" class="custom-select">
                                     <option value="">--Select Role--</option>
                                     @foreach($roles as $role)

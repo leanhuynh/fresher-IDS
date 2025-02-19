@@ -31,7 +31,7 @@ class HotelRequest extends FormRequest
                 'unique:\App\Models\Hotel,hotel_code,' . $this->route('hotel')
             ],
             'company_name' => 'required|string|max:255',
-            'email' => 'required|email',
+            'email' => 'required|email|max:255',
             'telephone' => [
                 'required', 'string',
                 'regex:/^\+?[0-9\-\s]+$/' // Chỉ chấp nhận số, dấu "-" và khoảng trắng

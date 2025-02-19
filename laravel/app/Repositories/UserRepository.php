@@ -58,10 +58,14 @@ class UserRepository implements UserRepositoryInterface
                 $imagePath = $image->store('/images', 'public');
             }
 
+            $admin = Role::where('name', Constant::ADMIN_ROLE_NAME)->first();
+            if (empty($admin)) {
+                throw new ModuleNotFoundException(__('exceptions.not_found.admin'));
+            }
             // set role id
             $role_id = (isset($data['role_id']) && !empty($data['role_id'])) 
                 ? $data['role_id'] 
-                : Constant::DEFAULT_USER_ROLE;
+                : $admin->id;
                 
             $newUser = $this->_model::create([
                 'avatar' => $imagePath,
@@ -89,21 +93,30 @@ class UserRepository implements UserRepositoryInterface
             // check permission of user
             $user = $this->_model::with('role')->findorFail($id); // find user by id or throw exception
             $auth = $this->_model::with('role')->findorFail($auth_id); // find user by id or throw exception
-            
+            $admin = Role::where('name', Constant::ADMIN_ROLE_NAME)->first();
+            if (empty($admin)) {
+                throw new ModuleNotFoundException(__('exceptions.not_found.admin'));
+            }
+
             // get role id of change user
-            $role_id = $user->role_id;
+            $role_id = $user->role_id || $admin->id;
 
             // check permission of actor
             if (isset($data['role_id']) && !empty($data['role_id'])) {
+                $role = Role::find($data['role_id']);
 
                 // trường hợp user đang login là members
                 // và actor muốn thay đổi profile của người khác
-                if ($auth->role->name !== Constant::ADMIN_ROLE_NAME && $auth->id !== $user->id) {
-                    throw new AuthorizationException(__('exceptions.permission.action.edit.role'));
+                if ($auth->role->name !== Constant::ADMIN_ROLE_NAME 
+                    && $role->name === Constant::ADMIN_ROLE_NAME) {
+                    throw new AuthorizationException(
+                        __('exceptions.permission.action.edit.role'));
                 } else {
                     // nếu có sự thay đổi role và user cần thay đổi là admin
-                    if ($data['role_id'] != $user->role->id && $user->role->name === Constant::ADMIN_ROLE_NAME) {
-                        throw new AuthorizationException(__('exceptions.permission.action.edit.role'));
+                    if ($data['role_id'] != $user->role->id 
+                            && $user->role->name === Constant::ADMIN_ROLE_NAME) {
+                        throw new AuthorizationException(
+                            __('exceptions.permission.action.edit.role'));
                     }
                 }
 

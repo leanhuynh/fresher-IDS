@@ -34,7 +34,7 @@
                 </table>
             </div>
             <div class="mt-5 text-center">
-                <button id="backBtn" class="btn btn-primary profile-button" type="button" onclick="window.history.back()">Back</button>
+                <button id="backBtn" class="btn btn-primary profile-button" type="button" onclick="window.location.href='/hotels'">Back</button>
             </div>
         </div>
     </form>

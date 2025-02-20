@@ -6,6 +6,7 @@ use App\Services\RoleService;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use App\Common\Constant;
+use App\Http\Request\RoleRequest;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
@@ -73,6 +74,18 @@ class RoleController extends Controller
             Log::error($e->getMessage());
             session()->flash('error', $e->getMessage());
             return view('error.default', ['status' => StatusCode::HTTP_STATUS_NOT_FOUND, 'message' => $e->getMessage()]); // Use StatusCode::HTTP_STATUS_NOT_FOUND
+        }
+    }
+
+    public function createRoleAPI(RoleRequest $request) 
+    {
+        try {
+            $role = $this->_roleService->createRole($request->validated());
+            log::info("create role with name: {$role->name}");
+            return redirect()->to('/roles')->with('success', __('messages.role.create.success'));
+        } catch (Exception $e) {
+            log::error($e->getMessage());
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 

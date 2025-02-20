@@ -44,9 +44,9 @@
         if ('{{session('success')}}') {
             customAlert('{{session('success')}}', 'success');
         }
-        // if ('{{session('error')}}') {
-        //     customAlert('{{session('error')}}', 'error');
-        // }
+        if ('{{session('error')}}') {
+            customAlert('{{session('error')}}', 'error');
+        }
         // if ('{{session('warning')}}') {
         //     customAlert('{{session('warning')}}', 'warning');
         // }

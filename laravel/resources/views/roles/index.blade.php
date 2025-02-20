@@ -22,7 +22,7 @@
 
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h5><strong>List of Roles</strong></h5>
-        <button class="btn btn-success" onclick="window.location.href='/roles/create'"     @if($roles->count() == 2) disabled @endif>
+        <button class="btn btn-success" onclick="window.location.href='/roles/create'" @if($roles->count() == 2) disabled @endif>
             <i class="fas fa-user-shield"></i> Add New Role
         </button>
     </div>

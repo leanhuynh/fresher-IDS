@@ -44,8 +44,16 @@ class UserRepository implements UserRepositoryInterface
         }
     }
 
-    public function createUser(array $data) {
+    public function createUser(array $data, $auth_id) {
         try {
+            $auth = $this->_model::with('role')->findorFail($auth_id);
+            if (empty($auth)) {
+                throw new ModuleNotFoundException(__('exceptions.not_found.auth'));
+            }
+            if ($auth->role->name !== Constant::ADMIN_ROLE_NAME) {
+                throw new AuthorizationException(__('eexceptions.permission.action.create.user'));
+            }
+
             // nếu data không có key 'password' hoặc là field password rỗng
             if (!isset($data['password']) || empty($data['password'])) {
                 throw new ValidationException(__('exceptions.not_found.password'));
@@ -79,6 +87,8 @@ class UserRepository implements UserRepositoryInterface
             ]);
 
             return $newUser;
+        } catch (AuthorizationException $e) {
+            throw $e;
         } catch (ValidationException $e) { // bắt sự kiện chưa có password
             throw $e;
         } catch (QueryException $e) {
@@ -94,31 +104,43 @@ class UserRepository implements UserRepositoryInterface
             $user = $this->_model::with('role')->findorFail($id); // find user by id or throw exception
             $auth = $this->_model::with('role')->findorFail($auth_id); // find user by id or throw exception
             $admin = Role::where('name', Constant::ADMIN_ROLE_NAME)->first();
+
+            // check empty
+            if (empty($user)) {
+                throw new ModuleNotFoundException(__('exceptions.not_found.auth'));
+            }
+            if (empty($auth)) {
+                throw new ModuleNotFoundException(__('exceptions.not_found.auth'));
+            }
             if (empty($admin)) {
                 throw new ModuleNotFoundException(__('exceptions.not_found.admin'));
             }
 
-            // get role id of change user
-            $role_id = $user->role_id || $admin->id;
-
+            $role_id = $user->role_id;
             // check permission of actor
             if (isset($data['role_id']) && !empty($data['role_id'])) {
-                $role = Role::find($data['role_id']);
+                // $role = Role::find($data['role_id']);
 
-                // trường hợp user đang login là members
-                // và actor muốn thay đổi profile của người khác
-                if ($auth->role->name !== Constant::ADMIN_ROLE_NAME 
-                    && $role->name === Constant::ADMIN_ROLE_NAME) {
-                    throw new AuthorizationException(
-                        __('exceptions.permission.action.edit.role'));
-                } else {
-                    // nếu có sự thay đổi role và user cần thay đổi là admin
-                    if ($data['role_id'] != $user->role->id 
-                            && $user->role->name === Constant::ADMIN_ROLE_NAME) {
+                // trường hợp user đang login là không phải Admin
+                if ($auth->role->name !== Constant::ADMIN_ROLE_NAME) {
+                    // Members thay đổi thông tin của tài khoản khác
+                    if ($auth_id !== $id) {
                         throw new AuthorizationException(
-                            __('exceptions.permission.action.edit.role'));
+                        __('exceptions.permission.action.edit.role')); 
+                    } else if ($data['role_id'] !== $user->role->id) {
+                        // Members thay đổi thông tin role của bản thân mình
+                        throw new AuthorizationException(
+                        __('exceptions.permission.action.edit.role'));
                     }
-                }
+                } 
+                // else {
+                //     // nếu có sự thay đổi role và user cần thay đổi là admin
+                //     if ($data['role_id'] != $user->role->id 
+                //             && $user->role->name === Constant::ADMIN_ROLE_NAME) {
+                //         throw new AuthorizationException(
+                //             __('exceptions.permission.action.edit.role'));
+                //     }
+                // }
 
                 // set role id
                 $role_id = $data['role_id'];
@@ -170,7 +192,7 @@ class UserRepository implements UserRepositoryInterface
             // check exist hotel with owner_id is user_id
             $hotels = Hotel::where('owner_id', $id)->get();
             if ($hotels->count() > 0) {
-                throw new AuthorizationException(__('exceptions.user.delete.hotel'));
+                throw new AuthorizationException(__('exceptions.exist.hotel'));
             }
 
             $user->delete();

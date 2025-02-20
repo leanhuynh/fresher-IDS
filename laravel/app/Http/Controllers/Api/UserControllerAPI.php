@@ -93,7 +93,13 @@ class UserControllerAPI extends Controller
     public function store(UserRequest $request)
     {   
         try {
-            $newUser = $this->_userService->createUser($request->validated());
+            if (!Auth::check()) {
+                throw new Exception(__('exceptions.login.no'));
+            }
+
+            $auth_id = Auth::user()->id;
+            if (empty($auth))
+            $newUser = $this->_userService->createUser($request->validated(), $auth_id);
             log::info("create new user with name = {$newUser->name}");
             return response()->json(['message' => __('messages.user.create.success'), 'user' => $newUser], StatusCode::HTTP_STATUS_CREATED);
         } catch(Exception $e) {

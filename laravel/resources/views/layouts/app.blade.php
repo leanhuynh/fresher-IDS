@@ -44,15 +44,15 @@
         if ('{{session('success')}}') {
             customAlert('{{session('success')}}', 'success');
         }
-        if ('{{session('error')}}') {
-            customAlert('{{session('error')}}', 'error');
-        }
-        if ('{{session('warning')}}') {
-            customAlert('{{session('warning')}}', 'warning');
-        }
-        if ('{{session('info')}}') {
-            customAlert('{{session('info')}}', 'info');
-        }
+        // if ('{{session('error')}}') {
+        //     customAlert('{{session('error')}}', 'error');
+        // }
+        // if ('{{session('warning')}}') {
+        //     customAlert('{{session('warning')}}', 'warning');
+        // }
+        // if ('{{session('info')}}') {
+        //     customAlert('{{session('info')}}', 'info');
+        // }
     }
 
     $(document).ready(function() {

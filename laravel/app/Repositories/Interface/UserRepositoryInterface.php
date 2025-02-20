@@ -10,7 +10,7 @@ interface UserRepositoryInterface
 
     public function createUser(array $data);
 
-    public function updateUser(array $data, $id, $auth_id);
+    public function updateUser(array $data, $id);
 
     public function deleteUser($id);
 

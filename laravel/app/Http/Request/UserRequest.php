@@ -26,7 +26,7 @@ class UserRequest extends FormRequest
             'email' => 'required|email|max:255|unique:\App\Models\User,email,' . $this->route('user'),
             'address' => 'nullable|string|max:255',
             'password' => [
-                'nullable', 'string', 'min:8', 'max:16', 'confirmed',
+                'string', 'min:8', 'max:16', 'confirmed',
                 'regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]+$/'
             ],
             'avatar' => 'nullable|sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',

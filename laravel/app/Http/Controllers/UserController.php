@@ -74,7 +74,6 @@ class UserController extends Controller
     public function editUserProfileById($id)
     {
         try {
-
             $user = $this->_userService->getUserProfileById($id);
             $roles = $this->_roleService->getAll();
             Log::info("get info of user id = {$id}");
@@ -87,6 +86,18 @@ class UserController extends Controller
             Log::error($e->getMessage());
             session()->flash('error', $e->getMessage());
             return view('error.default', ['status' => StatusCode::HTTP_STATUS_NOT_FOUND, 'message' => $e->getMessage()]); // Use StatusCode::HTTP_STATUS_NOT_FOUND
+        }
+    }
+
+    public function editUserProfileByIdAPI(UserRequest $request, $id)
+    {
+        try {
+            $user = $this->_userService->updateUser($request->validated(), $id);
+            log::info("update user successfully {$id}");
+            return redirect()->back()->with('success', __('messages.user.update.success'));
+        } catch (Exception $e) {
+            log::error($e->getMessage());
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 

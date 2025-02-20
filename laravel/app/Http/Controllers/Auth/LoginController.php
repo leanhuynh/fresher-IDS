@@ -28,7 +28,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/hotels';
 
     /**
      * Create a new controller instance.
@@ -70,6 +70,6 @@ class LoginController extends Controller
     }
 
     protected function redirectTo() {
-        return session()->pull('url.intended', '/users'); // if has no previous page, go to page list users
+        return session()->pull('url.intended', '/hotels'); // if has no previous page, go to page list users
     }
 }

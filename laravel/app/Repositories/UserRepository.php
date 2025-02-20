@@ -1,5 +1,7 @@
 <?php 
 namespace App\Repositories;
+
+use Illuminate\Support\Facades\Auth;
 use App\Repositories\Interface\UserRepositoryInterface;
 use App\Http\Request\UserRequest;
 use Illuminate\Support\Facades\Hash;
@@ -105,9 +107,9 @@ class UserRepository implements UserRepositoryInterface
         }
     }
 
-    public function updateUser(array $data, $id, $auth_id) {
+    public function updateUser(array $data, $id) {
         try {
-            // check permission of user
+            $auth_id = Auth::user()->id;
             $user = $this->_model::with('role')->findorFail($id); // find user by id or throw exception
             $auth = $this->_model::with('role')->findorFail($auth_id); // find user by id or throw exception
             $admin = Role::where('name', Constant::ADMIN_ROLE_NAME)->first();
@@ -184,8 +186,8 @@ class UserRepository implements UserRepositoryInterface
         } catch (QueryException $e) {
             throw new QueryException(__('exceptions.database.error'), $e->getBindings(), $e);
         } catch (Exception $e) {
-            throw new Exception(__('exceptions.unknown'));
-            // throw new Exception($e->getMessage());
+            // throw new Exception(__('exceptions.unknown'));
+            throw new Exception($e->getMessage());
         }
     }
 

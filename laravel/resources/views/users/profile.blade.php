@@ -11,36 +11,60 @@
 
 @section('content')
 <div class="container rounded bg-white">
-    <form id="formProfile" enctype="multipart/form-data">
+    <form id="formProfile" action="/users/edit/{{$user->id}}" method="POST" enctype="multipart/form-data">
         @csrf
+        @method('PUT')
+        
+        @if (session('error'))
+            <div class="alert alert-danger text-center">
+                {{ session('error') }}
+            </div>
+        @endif
+
         <div class="modal-body">
             <div class="row">
                 <div class="col-md-3 border-right">
                     <div class="d-flex flex-column align-items-center text-center p-3 py-5">
-                        <img id="profileImage" class="rounded-circle profile-pic mt-5" width="150px" 
-                        src="{{ $user->avatar ? asset('storage/' . $user->avatar) : 'https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg'}}" alt="Profile Picture">
-                        <span class="font-weight-bold">{{$user->name}}</span>
-                        <span class="text-black-50">{{$user->email}}</span>
-                        <span> </span>
+                        <!-- Profile Image -->
+                        <label for="fileInput" class="position-relative" style="cursor: pointer;">
+                            <img id="profileImage" class="rounded-circle profile-pic mt-3" width="150px"
+                                src="{{ $user->avatar ? asset('storage/' . $user->avatar) : 'https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg'}}"
+                                alt="Profile Picture">
+                            <input type="file" id="fileInput" name="avatar" class="d-none" accept="image/*">
+                        </label>
+                        <span class="font-weight-bold">{{ $user->name }}</span>
+                        <span class="text-black-50">{{ $user->email }}</span>
                     </div>
                 </div>
                 <div class="col-md-9 border-right">
                     <div class="p-3 py-5">
-                        <div class="modal-header" style="background-color:black;">
-                            <h5 class="modal-title" style="color:white;">Profile Information</h5>
+                        <div class="modal-header bg-black">
+                            <h5 class="modal-title text-white">Profile Information</h5>
                         </div>
                         <div class="row mt-2">
                             <div class="col-md-6">
                                 <label class="labels">First name <span class="text-danger">*</span></label>
-                                <input id="first_name" type="text" class="form-control" placeholder="first name" value="{{$user->first_name}}">
+                                <input id="first_name" name="first_name" type="text" class="form-control @error('first_name') is-invalid @enderror"
+                                    placeholder="First name" value="{{ old('first_name', $user->first_name) }}">
+                                @error('first_name')
+                                <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="col-md-6">
                                 <label class="labels">Last name <span class="text-danger">*</span></label>
-                                <input id="last_name" type="text" class="form-control" value="{{$user->last_name}}" placeholder="last name">
+                                <input id="last_name" name="last_name" type="text" class="form-control @error('last_name') is-invalid @enderror"
+                                    placeholder="Last name" value="{{ old('last_name', $user->last_name) }}">
+                                @error('last_name')
+                                <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="col-md-6">
                                 <label class="labels">User name <span class="text-danger">*</span></label>
-                                <input id="user_name" type="text" class="form-control" value="{{$user->user_name}}" placeholder="user name">
+                                <input id="user_name" name="user_name" type="text" class="form-control @error('user_name') is-invalid @enderror"
+                                    placeholder="User name" value="{{ old('user_name', $user->user_name) }}">
+                                @error('user_name')
+                                <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="col-md-6">
                                 <label class="labels">Role (Default is Admin) <span style="color:red">*</span></label>
@@ -56,53 +80,34 @@
                         </div>
                         <div class="row mt-3">
                             <div class="col-md-12">
-                                <label class="labels">Current Address</label>
-                                <input id="address" type="text" class="form-control" placeholder="enter address line" value="{{$user->address}}">
-                            </div>
-                            <div class="col-md-12">
                                 <label class="labels">Email <span class="text-danger">*</span></label>
-                                <input id="email" type="text" class="form-control" placeholder="enter email" value="{{$user->email}}">
+                                <input id="email" name="email" type="email" class="form-control @error('email') is-invalid @enderror"
+                                    placeholder="Enter email" value="{{ old('email', $user->email) }}">
+                                @error('email')
+                                <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
                             </div>
-                            {{-- <div class="col-md-12">
-                                <label class="labels">Password <span class="text-danger">*</span></label>
-                                <input id="password" type="password" class="form-control" placeholder="Leave blank if no changes are needed" value="">
-                            </div>
-                            <div class="col-md-12">
-                                <label class="labels">Confirm Password <span class="text-danger">*</span></label>
-                                <input id="password_confirmation" type="password" class="form-control" placeholder="write new password again" value="">
-                            </div> --}}
                         </div>
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <label class="labels">Address</label>
+                                <input id="address" name="address" type="text" class="form-control @error('address') is-invalid @enderror"
+                                    placeholder="Enter your address" value="{{ old('address', $user->address) }}">
+                                @error('address')
+                                <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
                         <div class="mt-5 text-center">
                             <button id="cancelBtn" class="btn btn-secondary profile-button" type="button">Cancel</button>
-                            <button id="saveBtn" class="btn btn-primary disabled profile-button" type="button">Save Profile</button>
+                            <button id="saveBtn" class="btn btn-primary profile-button disabled" type="submit">Save Profile</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </form>
-</div>
-
-<!-- Modal Upload -->
-<div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="uploadModalLabel">Upload Avatar</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <input type="file" id="fileInput" class="form-control">
-                <div class="text-center mt-3">
-                    <img id="previewImage" src="" alt="" class="img-fluid d-none" width="150">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="saveImage">Save Image</button>
-            </div>
-        </div>
-    </div>
 </div>
 @endsection
 
@@ -116,7 +121,6 @@
     let role_id = document.getElementById("role");
     let address = document.getElementById("address");
     let email = document.getElementById("email");
-    // let password = document.getElementById("password");
     let saveButton = document.getElementById("saveBtn");
 
     // save init value
@@ -127,7 +131,6 @@
         role_id: role_id.value,
         address: address.value,
         email: email.value,
-        // password: password.value,
     };
 
     function checkChanges() {
@@ -138,8 +141,6 @@
             role_id.value !== initialValues.role_id ||
             address.value !== initialValues.address ||
             email.value !== initialValues.email 
-            // ||
-            // password.value !== initialValues.password
         ) {
             saveButton.classList.remove("disabled"); 
             saveButton.removeAttribute("disabled");
@@ -160,151 +161,23 @@
 </script>
 <!-- upload Image -->
 <script>
-    document.getElementById("profileImage").addEventListener("click", function() {
-        let uploadModal = new bootstrap.Modal(document.getElementById("uploadModal"));
-        uploadModal.show();
-    });
+    document.addEventListener("DOMContentLoaded", function () {
+        const fileInput = document.getElementById("fileInput");
+        const profileImage = document.getElementById("profileImage");
 
-    document.getElementById("fileInput").addEventListener("change", function(event) {
-        let file = event.target.files[0];
-        if (file) {
-            let reader = new FileReader();
-            reader.onload = function(e) {
-                let previewImage = document.getElementById("previewImage");
-                previewImage.src = e.target.result;
-                previewImage.classList.remove("d-none");
-            };
-            reader.readAsDataURL(file);
-        }
-    });
+        // Khi chọn file, cập nhật ảnh đại diện
+        fileInput.addEventListener("change", function (event) {
+            const file = event.target.files[0];
 
-    document.getElementById("saveImage").addEventListener("click", function() {
-        // activate button "Save Profile"
-        saveButton.classList.remove('disabled');
-        saveButton.removeAttribute("disabled");
-        let previewImage = document.getElementById("previewImage");
-        if (previewImage.src) {
-            const base64Image = previewImage.src;
-            document.getElementById("profileImage").src = previewImage.src;
-        }
-        let uploadModal = bootstrap.Modal.getInstance(document.getElementById("uploadModal"));
-        uploadModal.hide();
-    });
-</script>
-<!-- AJAX -->
-<script>
-
-    function base64ToFile(base64, fileName) {
-        try {
-            // Kiểm tra chuỗi Base64 có hợp lệ không
-            if (!base64.startsWith("data:image")) {
-                throw new Error("Base64 không hợp lệ");
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    profileImage.src = e.target.result; // Cập nhật ảnh hiển thị
+                    saveButton.classList.remove("disabled"); 
+                    saveButton.removeAttribute("disabled");
+                };
+                reader.readAsDataURL(file);
             }
-
-            // Tách phần header và dữ liệu Base64
-            let arr = base64.split(',');
-            let mime = arr[0].match(/:(.*?);/)[1]; // Lấy loại MIME (image/png, image/jpeg)
-            let byteString = atob(arr[1]); // Giải mã Base64 thành chuỗi nhị phân
-            let arrayBuffer = new Uint8Array(byteString.length);
-
-            // Chuyển đổi thành Uint8Array
-            for (let i = 0; i < byteString.length; i++) {
-                arrayBuffer[i] = byteString.charCodeAt(i);
-            }
-
-            // Tạo Blob từ Uint8Array
-            let blob = new Blob([arrayBuffer], { type: mime });
-
-            // Tạo File từ Blob
-            let file = new File([blob], fileName, { type: mime });
-
-            console.log("File tạo thành công:", file);
-            return file;
-        } catch (error) {
-            console.error("Lỗi chuyển đổi Base64:", error);
-            return null;
-        }
-    }
-
-    $(document).ready(function() {
-        // SAVE BUTTON
-        $('#saveBtn').on('click', async function() {
-            // get image
-            const base64Image = $("#profileImage").attr('src');
-            let file = base64Image ? base64ToFile(base64Image, 'avatar.png') : null;
-
-            // get infor
-            const values = {
-                auth_id: {{ auth()->id() }}, // get current user id
-                role_id: role_id.value,
-                first_name: first_name.value,
-                last_name: last_name.value,
-                user_name: user_name.value,
-                address: address.value,
-                email: email.value,
-                // password: password.value,
-                // password_confirmation: $('#password_confirmation').val()
-            };
-
-            let formData = new FormData();
-
-            // append data
-            if (file)
-                formData.append('avatar', file);
-            
-            for (let key in values) {
-                formData.append(key, values[key]);
-            }
-
-            // append crsf token
-            let csrfToken = $('#formProfile').find('input[name="_token"]').val();
-            formData.append('_token', csrfToken);
-            formData.append('_method', 'PUT');
-
-            $.ajax({
-                    url: `/api/users/{{$user->id}}`,
-                    method: 'POST',
-                    data: formData,
-                    contentType: false, 
-                    processData: false,
-                    success: function(response) {
-                        customAlert(response?.message ?? 'Update successfully', 'success');
-                        // update init value
-                        initialValues = {
-                            first_name: first_name.value,
-                            last_name: last_name.value,
-                            user_name: user_name.value,
-                            role_id: role_id.value,
-                            address: address.value,
-                            email: email.value,
-                            // password: password.value,
-                        };
-
-                        // disable button
-                        saveButton.classList.add('disabled');
-                        saveButton.setAttribute('disabled', 'true');
-                    },
-                    error: function(xhr) {
-                        customAlert(xhr?.responseJSON?.message ?? 'Update failed', 'error');
-                    }
-                });
-        });
-
-        // CANCEL BUTTON
-        $("#cancelBtn").click(function() {
-            Swal.fire({
-                title: "Hotel Management Alert",
-                text: "Are you sure to cancel the edit user profile process?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, back to list users page!"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = '/users';
-                    }
-                });
         });
     });
 </script>

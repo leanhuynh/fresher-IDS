@@ -30,6 +30,7 @@ Route::prefix('/users')->middleware('auth')->group(function() {
     Route::get('/create', [UserController::class, 'createUser'])->name('users.createUser')->middleware('admin');
     Route::get('/profile', [UserController::class, 'viewUserProfileById'])->name('users.getProfile');
     Route::get('/edit/{user}', [UserController::class, 'editUserProfileById'])->name('users.editProfile')->middleware('admin');
+    Route::put('/edit/{user}', [UserController::class, 'editUserProfileByIdAPI'])->name('users.editProfileAPI')->middleware('admin');
 });
 
 Route::prefix('/hotels')->middleware('auth')->group(function() {

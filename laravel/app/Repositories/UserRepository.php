@@ -44,12 +44,18 @@ class UserRepository implements UserRepositoryInterface
         }
     }
 
-    public function createUser(array $data, $auth_id) {
+    public function createUser(array $data) {
         try {
-            $auth = $this->_model::with('role')->findorFail($auth_id);
-            if (empty($auth)) {
-                throw new ModuleNotFoundException(__('exceptions.not_found.auth'));
+
+            // nếu data không có key 'auth_id' hoặc là field auth_id rỗng
+            if (!array_key_exists('auth_id', $data) 
+                || $data['auth_id'] === null || $data['auth_id'] === '') {
+                throw ValidationException::withMessages(['message' => __('exceptions.not_found.auth')]);
             }
+
+
+            // tìm kiếm thông tin author
+            $auth = $this->_model::with('role')->findorFail($data['auth_id']);
             if ($auth->role->name !== Constant::ADMIN_ROLE_NAME) {
                 throw new AuthorizationException(__('exceptions.permission.action.create.user'));
             }
@@ -89,12 +95,13 @@ class UserRepository implements UserRepositoryInterface
             return $newUser;
         } catch (AuthorizationException $e) {
             throw $e;
-        } catch (ValidationException $e) { // bắt sự kiện chưa có password
+        } catch (ValidationException $e) {
             throw $e;
         } catch (QueryException $e) {
-            throw new QueryException(__('exceptions.database.error'));
+            throw new QueryException(__('exceptions.database.error'), $e->getBindings(), $e);
         } catch (Exception $e) {
             throw new Exception(__('exceptions.unknown'));
+            // throw new Exception($e->getMessage());
         }
     }
 
@@ -175,10 +182,10 @@ class UserRepository implements UserRepositoryInterface
         } catch (ModelNotFoundException $e) {
             throw $e;
         } catch (QueryException $e) {
-            throw new QueryException(__('exceptions.database.error'));
+            throw new QueryException(__('exceptions.database.error'), $e->getBindings(), $e);
         } catch (Exception $e) {
-            // throw new Exception(__('exceptions.unknown'));
-            throw new Exception($e->getMessage());
+            throw new Exception(__('exceptions.unknown'));
+            // throw new Exception($e->getMessage());
         }
     }
 
@@ -203,7 +210,7 @@ class UserRepository implements UserRepositoryInterface
         } catch (ModelNotFoundException $e) {
             throw $e;
         } catch (QueryException $e) {
-            throw new QueryException(__('exceptions.database.error'));
+            throw new QueryException(__('exceptions.database.error'), $e->getBindings(), $e);
         } catch (Exception $e) {
             throw new Exception(__('exceptions.unknown'));
         }
@@ -225,7 +232,7 @@ class UserRepository implements UserRepositoryInterface
 
             return $users;
         } catch (QueryException $e) {
-            throw new QueryException(__('exceptions.database.error'));
+            throw new QueryException(__('exceptions.database.error'), $e->getBindings(), $e);
         } catch (Exception $e) {
             throw new Exception(__('exceptions.unknown'));
         }
@@ -244,7 +251,7 @@ class UserRepository implements UserRepositoryInterface
         } catch (ModelNotFoundException $e) {
             throw $e;
         } catch (QueryException $e) {
-            throw new QueryException(__('exceptions.database.error'));
+            throw new QueryException(__('exceptions.database.error'), $e->getBindings(), $e);
         } catch (Exception $e) {
             throw new Exception(__('exceptions.unknown'));
         }

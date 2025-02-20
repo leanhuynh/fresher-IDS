@@ -47,7 +47,7 @@
         </thead>
         <tbody>
             @foreach($users as $index => $user)
-            <tr style="cursor: pointer; object-fit: cover;" ondblclick="window.location.href='/users/edit/{{$user->id}}'"id='tr-{{$user->id}}'>
+            <tr style="cursor: pointer; object-fit: cover;" ondblclick="window.location.href='{{ $user->id == auth()->id() ? '/users/profile' : '/users/edit/' . $user->id }}'" id='tr-{{$user->id}}'>
                 <td class="text-center">{{ $users->firstItem() + $index }}</td>
                 @if ($user->avatar)
                     <td><img src="{{ asset('storage/' . $user->avatar) }}" alt="Uploaded Image" class="rounded-circle" width="90px" /></td>

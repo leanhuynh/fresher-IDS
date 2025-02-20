@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use Illuminate\Support\Facades\Auth;
 use App\Common\StatusCode;
 use App\Models\User;
 use App\Http\Request\UserRequest;
@@ -31,9 +32,7 @@ class UserControllerAPI extends Controller
     public function store(UserRequest $request)
     {   
         try {
-            $auth_id = Auth::user()->id;
-            if (empty($auth))
-            $newUser = $this->_userService->createUser($request->validated(), $auth_id);
+            $newUser = $this->_userService->createUser($request->validated());
             log::info("create new user with name = {$newUser->name}");
             return response()
                     ->json(['message' => __('messages.user.create.success'), 

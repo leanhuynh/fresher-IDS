@@ -240,6 +240,7 @@
 
             // get infor
             const values = {
+                auth_id: {{ auth()->id() }},
                 first_name: first_name.value,
                 last_name: last_name.value,
                 user_name: user_name.value,

@@ -15,8 +15,8 @@ class UserService {
         return $this->_userRepository->getAll();
     }
 
-    public function createUser(array $data, $auth_id) {
-        return $this->_userRepository->createUser($data, $auth_id);
+    public function createUser(array $data) {
+        return $this->_userRepository->createUser($data);
     }
 
     public function findUserById($id) {

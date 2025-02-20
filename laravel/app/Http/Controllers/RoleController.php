@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use App\Services\RoleService;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
@@ -23,16 +24,8 @@ class RoleController extends Controller
     public function index(Request $request)
     {
         try {
-
-            $roles = $this->_roleService->getAll(); // Gọi service để lấy danh sách roles
-            
-            if ($request->ajax()) {
-                return response()->json([
-                    'roles' => $roles,
-                    'paginationHtml' => $roles->links('vendor.pagination.custom')->render(),
-                ]);
-            }
-
+            $filters = $request->only(['keyword']);
+            $roles = $this->_roleService->searchRoles($filters);
             return view('roles.index', compact('roles'));
         } catch (AuthorizationException $e) {
             Log::error($e->getMessage()); // Ghi log lỗi
@@ -113,6 +106,19 @@ class RoleController extends Controller
             $role = $this->_roleService->updateRole($request->validated(), $id);
             log::info("update of role id {$id}");
             return redirect()->back()->with('success', __('messages.role.update.success'));
+        } catch (Exception $e) {
+            log::error($e->getMessage());
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function deleteAPI(Request $request, $role_id)
+    {
+        try {
+            $auth_id = Auth::user()->id;
+            $this->_roleService->deleteRole($role_id, $auth_id);
+            log::info("delete role with id: {$role_id} and auth_id: {$auth_id}");
+            return redirect()->back()->with('success', __('messages.role.delete.success'));
         } catch (Exception $e) {
             log::error($e->getMessage());
             return redirect()->back()->with('error', $e->getMessage());

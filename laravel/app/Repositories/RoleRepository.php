@@ -105,7 +105,7 @@ class RoleRepository implements RoleRepositoryInterface
             // check if the user has permission to delete the role
             $auth = User::with('role')->find($auth_id);
             if (empty($auth)) {
-                throw new ModelNotFoundException(__('exceptions.not_found.user'));
+                throw new ModelNotFoundException(__('exceptions.not_found.auth'));
             }
             if ($auth->role->name !== Constant::ADMIN_ROLE_NAME) {
                 throw new AuthorizationException(__('exceptions.permission.action.delete.user'));

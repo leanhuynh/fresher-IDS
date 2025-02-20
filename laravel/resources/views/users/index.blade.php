@@ -103,7 +103,7 @@
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
+                    confirmButtonText: 'Yes, delete the user!'
                 }).then((result) => {
                     if (result.isConfirmed) {
                         form.submit(); // Gửi form nếu xác nhận

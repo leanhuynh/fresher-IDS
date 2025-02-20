@@ -63,14 +63,14 @@
                                 <label class="labels">Email <span class="text-danger">*</span></label>
                                 <input id="email" type="text" class="form-control" placeholder="enter email" value="{{$user->email}}">
                             </div>
-                            <div class="col-md-12">
+                            {{-- <div class="col-md-12">
                                 <label class="labels">Password <span class="text-danger">*</span></label>
                                 <input id="password" type="password" class="form-control" placeholder="Leave blank if no changes are needed" value="">
                             </div>
                             <div class="col-md-12">
                                 <label class="labels">Confirm Password <span class="text-danger">*</span></label>
                                 <input id="password_confirmation" type="password" class="form-control" placeholder="write new password again" value="">
-                            </div>
+                            </div> --}}
                         </div>
                         <div class="mt-5 text-center">
                             <button id="cancelBtn" class="btn btn-secondary profile-button" type="button">Cancel</button>
@@ -116,7 +116,7 @@
     let role_id = document.getElementById("role");
     let address = document.getElementById("address");
     let email = document.getElementById("email");
-    let password = document.getElementById("password");
+    // let password = document.getElementById("password");
     let saveButton = document.getElementById("saveBtn");
 
     // save init value
@@ -127,7 +127,7 @@
         role_id: role_id.value,
         address: address.value,
         email: email.value,
-        password: password.value,
+        // password: password.value,
     };
 
     function checkChanges() {
@@ -137,8 +137,9 @@
             user_name.value !== initialValues.user_name ||
             role_id.value !== initialValues.role_id ||
             address.value !== initialValues.address ||
-            email.value !== initialValues.email ||
-            password.value !== initialValues.password
+            email.value !== initialValues.email 
+            // ||
+            // password.value !== initialValues.password
         ) {
             saveButton.classList.remove("disabled"); 
             saveButton.removeAttribute("disabled");
@@ -155,7 +156,7 @@
     role_id.addEventListener("input", checkChanges);
     address.addEventListener("input", checkChanges);
     email.addEventListener("input", checkChanges);
-    password.addEventListener("input", checkChanges);
+    // password.addEventListener("input", checkChanges);
 </script>
 <!-- upload Image -->
 <script>
@@ -241,8 +242,8 @@
                 user_name: user_name.value,
                 address: address.value,
                 email: email.value,
-                password: password.value,
-                password_confirmation: $('#password_confirmation').val()
+                // password: password.value,
+                // password_confirmation: $('#password_confirmation').val()
             };
 
             let formData = new FormData();
@@ -276,7 +277,7 @@
                             role_id: role_id.value,
                             address: address.value,
                             email: email.value,
-                            password: password.value,
+                            // password: password.value,
                         };
 
                         // disable button

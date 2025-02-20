@@ -171,9 +171,9 @@ class UserRepository implements UserRepositoryInterface
             $user->role_id = $role_id;
 
             // encode the password
-            if ($data['password']) {
-                $user->password = Hash::make($data['password']);
-            }
+            // if ($data['password']) {
+            //     $user->password = Hash::make($data['password']);
+            // }
             $user->save();
 
             return $user;

@@ -192,11 +192,11 @@ return [
         'max' => 'Name can not be long than 255 characters'
     ],
 
-    'email' => [
-        'required' => 'Email is required',
-        'unique' => 'Email must be unique',
-        'email' => 'Email must be right form'
-    ],
+    // 'email' => [
+    //     'required' => 'Email is required',
+    //     'unique' => 'Email must be unique',
+    //     'email' => 'Email must be right form'
+    // ],
 
     'password' => [
         'nullable' => 'Password can not be empty',

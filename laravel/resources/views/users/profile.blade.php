@@ -27,9 +27,15 @@
                     <div class="d-flex flex-column align-items-center text-center p-3 py-5">
                         <!-- Profile Image -->
                         <label for="fileInput" class="position-relative" style="cursor: pointer;">
-                            <img id="profileImage" class="rounded-circle profile-pic mt-3" width="150px"
-                                src="{{ $user->avatar ? asset('storage/' . $user->avatar) : 'https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg'}}"
-                                alt="Profile Picture">
+                            <div id="imageContainer">
+                                <img id="profileImage" class="rounded-circle profile-pic mt-3" width="150px"
+                                    src="{{ $user->avatar ? asset('storage/' . $user->avatar) : '' }}"
+                                    alt="Profile Picture"
+                                    style="{{ $user->avatar ? '' : 'display: none;' }}">
+                                <span id="noImageText" class="text-muted" style="{{ $user->avatar ? 'display: none;' : '' }}">
+                                    No Image (click to Upload)
+                                </span>
+                            </div>
                             <input type="file" id="fileInput" name="avatar" class="d-none" accept="image/*">
                         </label>
                         <span class="font-weight-bold">{{ $user->name }}</span>
@@ -76,6 +82,9 @@
                                         </option>
                                     @endforeach
                                 </select>
+                                @error('role_id')
+                                <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
                         <div class="row mt-3">
@@ -164,20 +173,46 @@
     document.addEventListener("DOMContentLoaded", function () {
         const fileInput = document.getElementById("fileInput");
         const profileImage = document.getElementById("profileImage");
+        const noImageText = document.getElementById("noImageText");
 
-        // Khi chọn file, cập nhật ảnh đại diện
-        fileInput.addEventListener("change", function (event) {
-            const file = event.target.files[0];
-
-            if (file) {
+        // Khi người dùng chọn file
+        fileInput.addEventListener("change", function () {
+            if (fileInput.files && fileInput.files[0]) {
                 const reader = new FileReader();
                 reader.onload = function (e) {
-                    profileImage.src = e.target.result; // Cập nhật ảnh hiển thị
                     saveButton.classList.remove("disabled"); 
                     saveButton.removeAttribute("disabled");
+                    profileImage.src = e.target.result;
+                    profileImage.style.display = "block"; // Hiện ảnh
+                    noImageText.style.display = "none"; // Ẩn chữ "No Image"
                 };
-                reader.readAsDataURL(file);
+                reader.readAsDataURL(fileInput.files[0]); // Đọc file
             }
+        });
+
+        // Nếu trang load mà không có ảnh, hiển thị chữ "No Image"
+        if (!profileImage.src || profileImage.src === window.location.href) {
+            profileImage.style.display = "none";
+            noImageText.style.display = "block";
+        }
+    });
+
+    $(document).ready(function() {
+        // CANCEL BUTTON
+        $("#cancelBtn").click(function() {
+            Swal.fire({
+                title: "Hotel Management Alert",
+                text: "Are you sure to cancel the edit user profile process?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, back to list users page!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '/users';
+                    }
+                });
         });
     });
 </script>

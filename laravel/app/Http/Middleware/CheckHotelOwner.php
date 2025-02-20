@@ -29,7 +29,7 @@ class CheckHotelOwner
 
         // Kiểm tra nếu user_id của hotel có khớp với user đang đăng nhập không
         if (!Auth::user() || !Auth::user()->role || Auth::user()->role->name !== Constant::ADMIN_ROLE_NAME && $hotel->owner_id !== Auth::id()) {
-            abort(StatusCode::HTTP_STATUS_FORBIDDEN, 'You do not have permission to view this hotel.');
+            abort(StatusCode::HTTP_STATUS_FORBIDDEN, __('exceptions.permission.action.default'));
         }
 
         return $next($request); // Cho phép tiếp tục nếu hợp lệ

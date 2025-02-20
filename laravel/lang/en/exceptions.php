@@ -60,7 +60,9 @@ return [
                 'role' => "You don't have permission to delete the role!!",
                 'hotel' => "You don't have permission to delete the hotel!!",
                 'user' => "You don't have permission to delete the user!!",
-            ]
+            ],
+
+            'default' => "You don't have permission to do this action!!",
         ]
     ],
 

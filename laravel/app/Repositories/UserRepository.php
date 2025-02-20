@@ -48,16 +48,14 @@ class UserRepository implements UserRepositoryInterface
 
     public function createUser(array $data) {
         try {
-
+            $auth_id = Auth::user()->id;
             // nếu data không có key 'auth_id' hoặc là field auth_id rỗng
-            if (!array_key_exists('auth_id', $data) 
-                || $data['auth_id'] === null || $data['auth_id'] === '') {
+            if (empty($auth_id)) {
                 throw ValidationException::withMessages(['message' => __('exceptions.not_found.auth')]);
             }
 
-
             // tìm kiếm thông tin author
-            $auth = $this->_model::with('role')->findorFail($data['auth_id']);
+            $auth = $this->_model::with('role')->findorFail($auth_id);
             if ($auth->role->name !== Constant::ADMIN_ROLE_NAME) {
                 throw new AuthorizationException(__('exceptions.permission.action.create.user'));
             }
@@ -102,8 +100,8 @@ class UserRepository implements UserRepositoryInterface
         } catch (QueryException $e) {
             throw new QueryException(__('exceptions.database.error'), $e->getBindings(), $e);
         } catch (Exception $e) {
-            throw new Exception(__('exceptions.unknown'));
-            // throw new Exception($e->getMessage());
+            // throw new Exception(__('exceptions.unknown'));
+            throw new Exception($e->getMessage());
         }
     }
 

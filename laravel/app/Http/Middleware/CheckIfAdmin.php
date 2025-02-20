@@ -22,7 +22,7 @@ class CheckIfAdmin
         // Kiểm tra vai trò của người dùng
         if (!Auth::user() || !Auth::user()->role || Auth::user()->role->name !== Constant::ADMIN_ROLE_NAME) {
             // Nếu không phải admin, trả về lỗi 403
-            abort(StatusCode::HTTP_STATUS_FORBIDDEN, __('exceptions.permission.action.view.page'));
+            abort(StatusCode::HTTP_STATUS_FORBIDDEN, __('exceptions.permission.action.default'));
         }
 
         return $next($request);

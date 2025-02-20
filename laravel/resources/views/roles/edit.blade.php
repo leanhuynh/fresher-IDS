@@ -11,8 +11,16 @@
 
 @section('content')
 <div class="container rounded bg-white">
-    <form id="formRole" enctype="multipart/form-data">
+    <form id="formRole" action="/roles/edit/{{$role->id}}" method="POST" enctype="multipart/form-data">
         @csrf
+        @method('PUT') <!-- Dùng phương thức PUT để cập nhật dữ liệu -->
+
+        @if (session('error'))
+            <div class="alert alert-danger text-center">
+                {{ session('error') }}
+            </div>
+        @endif
+
         <div class="modal-body">
             <div class="row">
                 <div class="col-md-12">
@@ -23,16 +31,22 @@
                         <div class="row mt-2">
                             <div class="col-md-6">
                                 <label class="labels">Role name</label>
-                                <input id="name" type="text" class="form-control" placeholder="enter name" value="{{$role->name}}" disabled>
+                                <input id="name" name="name" type="text" class="form-control" placeholder="Enter name" value="{{ old('name', $role->name) }}" readonly>
+                                @error('name')
+                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="col-md-6">
                                 <label class="labels">Role description</label>
-                                <input id="description" type="text" class="form-control" value="{{$role->description}}" placeholder="enter description">
+                                <input id="description" name="description" type="text" class="form-control" value="{{ old('description', $role->description) }}" placeholder="Enter description">
+                                @error('description')
+                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
                         <div class="mt-5 text-center">
                             <button id="cancelBtn" class="btn btn-secondary profile-button" type="button">Cancel</button>
-                            <button id="saveBtn" class="btn btn-primary disabled profile-button" type="button">Save Role</button>
+                            <button id="saveBtn" class="btn btn-primary profile-button" type="submit" disabled>Save Role</button>
                         </div>
                     </div>
                 </div>
@@ -78,86 +92,7 @@
 <script>
 
     $(document).ready(function() {
-        // SAVE BUTTON
-        $('#saveBtn').on('click', async function() {
-            // get image
-            const base64Image = $("#profileImage").attr('src');
-
-            // get infor
-            const values = {
-                name: name.value,
-                description: description.value,
-            };
-
-            let formData = new FormData();
-
-            // append data
-            for (let key in values) {
-                formData.append(key, values[key]);
-            }
-
-            // append crsf token
-            let csrfToken = $('#formRole').find('input[name="_token"]').val();
-            formData.append('_token', csrfToken);
-            formData.append('_method', 'PUT');
-
-            $.ajax({
-                    url: '/api/roles/{{$role->id}}',
-                    method: 'POST',
-                    data: formData,
-                    contentType: false, 
-                    processData: false,
-                    success: function(response) {
-                        Swal.fire({
-                            title: "<strong>Hotel Management Notifications</strong>",
-                            html: `<strong style='color:green'>${response?.message ?? 'Updated successfully'}</strong>`,
-                            timer: 2000,
-                            position: 'top-end',
-                            showConfirmButton: false,
-                            timerProgressBar: true,
-                            showClass: {
-                                popup: `
-                                    animate__animated
-                                    animate__fadeInUp
-                                    animate__faster
-                                    `
-                            },
-                            hideClass: {
-                                popup: `
-                                    animate__animated
-                                    animate__fadeOutDown
-                                    animate__faster
-                                    `
-                            }
-                        });
-                    },
-                    error: function(xhr) {
-                        // Swal.fire({
-                        //     title: "<strong>Hotel Management Notifications</strong>",
-                        //     html: `<strong style='color:red'>${xhr?.responseJSON?.message ?? 'Errors occurs!'}</strong>`,
-                        //     timer: 2000,
-                        //     position: 'top-end',
-                        //     showConfirmButton: false,
-                        //     timerProgressBar: true,
-                        //     showClass: {
-                        //         popup: `
-                        //             animate__animated
-                        //             animate__fadeInUp
-                        //             animate__faster
-                        //             `
-                        //     },
-                        //     hideClass: {
-                        //         popup: `
-                        //             animate__animated
-                        //             animate__fadeOutDown
-                        //             animate__faster
-                        //             `
-                        //     }
-                        // });
-                    }
-                });
-        });
-
+        
         // CANCEL BUTTON
         $("#cancelBtn").click(function() {
             Swal.fire({

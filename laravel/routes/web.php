@@ -51,6 +51,7 @@ Route::prefix('/roles')->middleware(['auth', 'admin'])->group(function() {
     Route::get('/create', [RoleController::class, 'createRole'])->name('roles.createRole');
     Route::post('/create', [RoleController::class, 'createRoleAPI'])->name('roles.createRoleAPI');
     Route::get('/edit/{role}', [RoleController::class, 'editRole'])->name('roles.editRole');
+    Route::put('/edit/{role}', [RoleController::class, 'editRoleAPI'])->name('roles.editRoleAPI');
 });
 Auth::routes();
 

@@ -33,18 +33,24 @@
                                 <select id="name" name="name" class="custom-select">
                                     <option value="" selected>--Select Role--</option>
                                     @foreach($roles as $role)
-                                        <option value="{{$role->name}}" {{$role->isExisted ? "disabled" : ""}}>{{$role->name}}</option>
+                                        <option value="{{ $role->name }}" {{ $role->isExisted ? "disabled" : "" }}>{{ $role->name }}</option>
                                     @endforeach
                                 </select>
+                                @error('name')
+                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="col-md-6">
                                 <label class="labels">Description</label>
-                                <input id="description" name="description" type="text" class="form-control" placeholder="Enter description">
+                                <input id="description" name="description" type="text" class="form-control" placeholder="Enter description" value="{{ old('description') }}">
+                                @error('description')
+                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
                         <div class="mt-5 text-center">
                             <button id="cancelBtn" class="btn btn-secondary profile-button" type="button">Cancel</button>
-                            <button id="saveBtn" class="btn btn-primary profile-button" type="submit">Save Role</button>
+                            <button id="saveBtn" class="btn btn-primary profile-button" type="submit" disabled>Save Role</button>
                         </div>
                     </div>
                 </div>

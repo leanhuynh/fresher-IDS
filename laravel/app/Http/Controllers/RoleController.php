@@ -106,4 +106,16 @@ class RoleController extends Controller
             return view('error.default', ['status' => StatusCode::HTTP_STATUS_NOT_FOUND, 'message' => $e->getMessage()]); // Use StatusCode::HTTP_STATUS_NOT_FOUND
         }
     }
+
+    public function editRoleAPI(RoleRequest $request, $id) 
+    {
+        try {
+            $role = $this->_roleService->updateRole($request->validated(), $id);
+            log::info("update of role id {$id}");
+            return redirect()->back()->with('success', __('messages.role.update.success'));
+        } catch (Exception $e) {
+            log::error($e->getMessage());
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
 }

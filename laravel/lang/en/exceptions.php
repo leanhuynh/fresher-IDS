@@ -26,10 +26,10 @@ return [
         'user' => 'User exists in database!!',
     ],
 
-    'login' => [
-        'yes' => 'User is logged in!!',
-        'no' => 'User is not logged in!!',
-    ],
+    // 'login' => [
+    //     'yes' => 'User is logged in!!',
+    //     'no' => 'User is not logged in!!',
+    // ],
 
     'unexpected' => 'An unexpected error occurred: ',
 

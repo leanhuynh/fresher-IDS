@@ -51,7 +51,7 @@ class UserRepository implements UserRepositoryInterface
                 throw new ModuleNotFoundException(__('exceptions.not_found.auth'));
             }
             if ($auth->role->name !== Constant::ADMIN_ROLE_NAME) {
-                throw new AuthorizationException(__('eexceptions.permission.action.create.user'));
+                throw new AuthorizationException(__('exceptions.permission.action.create.user'));
             }
 
             // nếu data không có key 'password' hoặc là field password rỗng
@@ -116,10 +116,10 @@ class UserRepository implements UserRepositoryInterface
                 throw new ModuleNotFoundException(__('exceptions.not_found.admin'));
             }
 
+            // init role_id value of user
             $role_id = $user->role_id;
             // check permission of actor
             if (isset($data['role_id']) && !empty($data['role_id'])) {
-                // $role = Role::find($data['role_id']);
 
                 // trường hợp user đang login là không phải Admin
                 if ($auth->role->name !== Constant::ADMIN_ROLE_NAME) {
@@ -127,7 +127,7 @@ class UserRepository implements UserRepositoryInterface
                     if ($auth_id !== $id) {
                         throw new AuthorizationException(
                         __('exceptions.permission.action.edit.role')); 
-                    } else if ($data['role_id'] !== $user->role->id) {
+                    } else if ($data['role_id'] != $user->role->id) {
                         // Members thay đổi thông tin role của bản thân mình
                         throw new AuthorizationException(
                         __('exceptions.permission.action.edit.role'));
@@ -177,7 +177,8 @@ class UserRepository implements UserRepositoryInterface
         } catch (QueryException $e) {
             throw new QueryException(__('exceptions.database.error'));
         } catch (Exception $e) {
-            throw new Exception(__('exceptions.unknown'));
+            // throw new Exception(__('exceptions.unknown'));
+            throw new Exception($e->getMessage());
         }
     }
 

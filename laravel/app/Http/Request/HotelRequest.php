@@ -25,7 +25,7 @@ class HotelRequest extends FormRequest
                 'regex:/^[\pL0-9\s]+$/u'  // Cho phép chữ cái, số và khoảng trắng
             ],
             'city_id' => 'required|integer|exists:\App\Models\City,id',
-            'owner_id' => 'required|integer|exists:\App\Models\User,id',
+            // 'owner_id' => 'required|integer|exists:\App\Models\User,id',
             'hotel_code' => [
                 'required', 'string', 'size:6', 'alpha_num',
                 'unique:\App\Models\Hotel,hotel_code,' . $this->route('hotel')
@@ -70,9 +70,9 @@ class HotelRequest extends FormRequest
             'city_id.integer' => __('validation.integer'),
             'city_id.exists' => __('validation.database.exists', ['database' => 'City']),
 
-            'owner_id.required' => __('validation.required'),
-            'owner_id.integer' => __('validation.integer'),
-            'owner_id.exists' => __('validation.exists'),
+            // 'owner_id.required' => __('validation.required'),
+            // 'owner_id.integer' => __('validation.integer'),
+            // 'owner_id.exists' => __('validation.exists'),
 
             'hotel_code.required' => __('validation.required'),
             'hotel_code.string' => __('validation.string'),

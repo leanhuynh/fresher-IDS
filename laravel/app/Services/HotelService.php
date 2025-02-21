@@ -22,8 +22,8 @@ class HotelService {
         return $this->_hotelRepository->findHotelById($hotel_id, $owner_id);
     }
 
-    public function createHotel(array $data) {
-        return $this->_hotelRepository->createHotel($data);
+    public function createHotel(array $data, $owner_id) {
+        return $this->_hotelRepository->createHotel($data, $owner_id);
     }
 
     public function searchHotels(array $filter) {

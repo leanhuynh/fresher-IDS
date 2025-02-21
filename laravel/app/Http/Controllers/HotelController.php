@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use App\Services\HotelService;
+use App\Http\Request\HotelRequest;
 use App\Services\CityService;
 use Illuminate\Http\Request;
 use App\Common\StatusCode;
@@ -70,6 +71,19 @@ class HotelController extends Controller
                 'status' => StatusCode::HTTP_STATUS_NOT_FOUND,
                 'message' => $e->getMessage()
             ]);
+        }
+    }
+
+    public function createHotelAPI(HotelRequest $request) 
+    {
+        try {
+            $owner_id = Auth::user()->id;
+            $hotel = $this->_hotelService->createHotel($request->validated(), $owner_id);
+            log::info("create hotel successfully with id : {$hotel->id} and owner id : {$hotel->owner_id}");
+            return redirect()->to('/hotels')->with('success', __('messages.hotel.create.success'));
+        } catch (Exception $e) {
+            log::error($e->getMessage());
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 

@@ -80,11 +80,16 @@ class HotelRepository implements HotelRepositoryInterface
         }
     }
 
-    public function createHotel(array $data) {
+    public function createHotel(array $data, $owner_id) {
         try {
+            $owner = User::with('role')->find($owner_id);
+            if (empty($owner)) {
+                throw new ModelNotFoundException(__('exceptions.not_found.owner'));
+            }
+
             // Tạo mới hotel
             $newHotel = $this->_model::create([
-                'owner_id' => $data['owner_id'],
+                'owner_id' => $owner_id,
                 'city_id' => $data['city_id'],
                 'name_en' => $data['name_en'],
                 'name_jp' => $data['name_jp'],

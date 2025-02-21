@@ -8,7 +8,7 @@ interface HotelRepositoryInterface
 
     public function findHotelById($hotel_id, $owner_id);
 
-    public function createHotel(array $data);
+    public function createHotel(array $data, $owner_id);
 
     public function searchHotels(array $filter);
 

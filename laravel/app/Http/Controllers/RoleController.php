@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use App\Services\RoleService;
+use App\Common\StatusCode;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use App\Common\Constant;
@@ -33,7 +34,7 @@ class RoleController extends Controller
             return view('error.default', ['status' => StatusCode::HTTP_STATUS_FORBIDDEN, 'message' => $e->getMessage()]); // Use StatusCode::HTTP_STATUS_FORBIDDEN
         } catch (Exception $e) {
             Log::error($e->getMessage()); // Ghi log lỗi
-            session()->flash('error', 'Something went wrong!');
+            session()->flash('error', $e->getMessage());
             return view('error.default', ['status' => StatusCode::HTTP_STATUS_NOT_FOUND, 'message' => $e->getMessage()]); // Use StatusCode::HTTP_STATUS_NOT_FOUND
         }
     }

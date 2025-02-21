@@ -2,75 +2,112 @@
 
 @section('content')
 <div class="container rounded bg-white">
-    <form id="formRole" enctype="multipart/form-data">
+    <form id="formRole" action="/hotels/edit/{{$hotel->id}}" method="POST" enctype="multipart/form-data">
         @csrf
+        @method('PUT')
         <div class="modal-header" style="background-color:black;">
             <h5 class="modal-title" style="color:white;">Hotel Information</h5>
         </div>
+
+        <!-- Hiển thị thông báo lỗi nếu có -->
+        @if (session('error'))
+            <div class="alert alert-danger text-center mt-2">
+                {{ session('error') }}
+            </div>
+        @endif
+
         <div class="modal-body">
             <div class="container mt-4">
                 <div class="row mb-3">
                     <div class="col-md-3">
                         <label class="form-label" for="name_en">Hotel Name (EN) <span style="color: red;">*</span></label>
-                        <input type="text" class="form-control" id="name_en" name="name_en" value="{{ $hotel->name_en ?? '' }}" placeholder="Enter name (EN)">
+                        <input type="text" class="form-control {{ $errors->has('name_en') ? 'is-invalid' : '' }}" id="name_en" name="name_en" value="{{ old('name_en', $hotel->name_en ?? '') }}" placeholder="Enter name (EN)">
+                        @error('name_en')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="col-md-3">
                         <label class="form-label" for="name_jp">Hotel Name (JP) <span style="color: red;">*</span></label>
-                        <input type="text" class="form-control" id="name_jp" name="name_jp" value="{{ $hotel->name_jp ?? '' }}" placeholder="Enter name (JP)">
+                        <input type="text" class="form-control {{ $errors->has('name_jp') ? 'is-invalid' : '' }}" id="name_jp" name="name_jp" value="{{ old('name_jp', $hotel->name_jp ?? '') }}" placeholder="Enter name (JP)">
+                        @error('name_jp')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="col-md-3">
                         <label class="form-label" for="city_id">City <span style="color: red;">*</span></label>
-                        <select class="form-select" id="city_id" name="city">
+                        <select class="form-select {{ $errors->has('city') ? 'is-invalid' : '' }}" id="city_id" name="city_id">
                             <option value="">--Select City--</option>
                             @foreach($cities as $city)
-                                <option value="{{ $city->id }}" {{ (isset($hotel) && $hotel->city_id == $city->id) ? 'selected' : '' }}>
+                                <option value="{{ $city->id }}" {{ old('city', $hotel->city_id ?? '') == $city->id ? 'selected' : '' }}>
                                     {{ $city->name }}
                                 </option>
                             @endforeach
                         </select>
+                        @error('city_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Hotel Code (6 Digits)<span style="color:red">*</span></label>
-                        <input type="text" class="form-control" id="hotel_code" name="hotel_code" value="{{ $hotel->hotel_code ?? '' }}" placeholder="Enter hotel code">
+                        <input type="text" class="form-control {{ $errors->has('hotel_code') ? 'is-invalid' : '' }}" id="hotel_code" name="hotel_code" value="{{ old('hotel_code', $hotel->hotel_code ?? '') }}" placeholder="Enter hotel code">
+                        @error('hotel_code')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
+
                 <div class="row mb-3">
                     <div class="col-md-3">
                         <label class="form-label" for="company_name">Company Name <span style="color: red;">*</span></label>
-                        <input type="text" class="form-control" id="company_name" name="company_name" value="{{ $hotel->company_name ?? '' }}" placeholder="Enter company name">
+                        <input type="text" class="form-control {{ $errors->has('company_name') ? 'is-invalid' : '' }}" id="company_name" name="company_name" value="{{ old('company_name', $hotel->company_name ?? '') }}" placeholder="Enter company name">
+                        @error('company_name')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="col-md-3">
                         <label class="form-label" for="email">Email <span style="color: red;">*</span></label>
-                        <input type="email" class="form-control" id="email" name="email" value="{{ $hotel->email ?? '' }}" placeholder="Enter email">
+                        <input type="email" class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" id="email" name="email" value="{{ old('email', $hotel->email ?? '') }}" placeholder="Enter email">
+                        @error('email')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="col-md-3">
                         <label class="form-label" for="telephone">Telephone <span style="color: red;">*</span></label>
-                        <input type="text" class="form-control" id="telephone" name="telephone" value="{{ $hotel->telephone ?? '' }}" placeholder="Enter telephone number">
+                        <input type="text" class="form-control {{ $errors->has('telephone') ? 'is-invalid' : '' }}" id="telephone" name="telephone" value="{{ old('telephone', $hotel->telephone ?? '') }}" placeholder="Enter telephone number">
+                        @error('telephone')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="col-md-3">
                         <label class="form-label" for="fax">Fax</label>
-                        <input type="text" class="form-control" id="fax" name="fax" value="{{ $hotel->fax ?? '' }}" placeholder="Enter fax number">
+                        <input type="text" class="form-control" id="fax" name="fax" value="{{ old('fax', $hotel->fax ?? '') }}" placeholder="Enter fax number">
                     </div>
                 </div>
+
                 <div class="row mb-3">
                     <div class="col-md-3">
                         <label class="form-label" for="tax_code">Tax Code</label>
-                        <input type="text" class="form-control" id="tax_code" name="tax_code" value="{{ $hotel->tax_code ?? '' }}" placeholder="Enter tax code">
+                        <input type="text" class="form-control" id="tax_code" name="tax_code" value="{{ old('tax_code', $hotel->tax_code ?? '') }}" placeholder="Enter tax code">
                     </div>
                 </div>
+
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label" for="address_1">Address 1 <span style="color: red;">*</span></label>
-                        <textarea class="form-control" id="address_1" name="address_1" placeholder="Enter address line 1">{{ $hotel->address_1 ?? '' }}</textarea>
+                        <textarea class="form-control {{ $errors->has('address_1') ? 'is-invalid' : '' }}" id="address_1" name="address_1" placeholder="Enter address line 1">{{ old('address_1', $hotel->address_1 ?? '') }}</textarea>
+                        @error('address_1')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="col-md-6">
                         <label class="form-label" for="address_2">Address 2</label>
-                        <textarea class="form-control" id="address_2" name="address_2" placeholder="Enter address line 2">{{ $hotel->address_2 ?? '' }}</textarea>
+                        <textarea class="form-control" id="address_2" name="address_2" placeholder="Enter address line 2">{{ old('address_2', $hotel->address_2 ?? '') }}</textarea>
                     </div>
                 </div>
+
                 <div class="mt-5 text-center">
                     <button id="cancelBtn" class="btn btn-secondary profile-button" type="button">Cancel</button>
-                    <button id="saveBtn" class="btn btn-primary disabled profile-button" type="button">Save Hotel</button>
+                    <button id="saveBtn" class="btn btn-primary profile-button" type="submit" disabled>Save Hotel</button>
                 </div>
             </div>
         </div>
@@ -113,43 +150,7 @@
 </script>
 <!-- AJAX -->
 <script>
-
     $(document).ready(function() {
-        // SAVE BUTTON
-        $("#saveBtn").click(function () {
-
-            // Thu thập dữ liệu từ form
-            let formData = new FormData();
-            formData.append("name_en", $("#name_en").val());
-            formData.append("name_jp", $("#name_jp").val());
-            formData.append("city_id", $("#city_id").val());
-            formData.append("owner_id", {{ auth()->id() }});
-            formData.append("hotel_code", $("#hotel_code").val());
-            formData.append("company_name", $("#company_name").val());
-            formData.append("email", $("#email").val());
-            formData.append("telephone", $("#telephone").val());
-            formData.append("fax", $("#fax").val());
-            formData.append("tax_code", $("#tax_code").val());
-            formData.append("address_1", $("#address_1").val());
-            formData.append("address_2", $("#address_2").val());
-            formData.append("_token", "{{ csrf_token() }}"); // CSRF token Laravel
-            formData.append("_method", "PUT"); // Laravel nhận diện là PUT request
-
-            // Gửi AJAX request để lưu dữ liệu
-            $.ajax({
-                url: `/api/hotels/{{ $hotel->id }}`,
-                method: "POST",
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function(response) {
-                    customAlert(response?.message ?? 'Create successfully', 'success');
-                },
-                error: function(xhr) {
-                    customAlert(xhr?.responseJSON?.message ?? 'Create failed', 'error');
-                }
-            });
-        });
 
         // CANCEL BUTTON
         $("#cancelBtn").click(function() {

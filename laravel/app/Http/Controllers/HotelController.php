@@ -128,4 +128,16 @@ class HotelController extends Controller
             ]);
         }
     }
+
+    public function editHotelAPI(HotelRequest $request, $hotel_id)
+    {
+        try {
+            $hotel = $this->_hotelService->updateHotel($request->validated(), $hotel_id);
+            log::info("edit hotel successfully with id : {$hotel->id} and owner id : {$hotel->owner_id}");
+            return redirect()->back()->with('success', __('messages.hotel.update.success'));
+        } catch (Exception $e) {
+            log::error($e->getMessage());
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
 }

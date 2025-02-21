@@ -1,7 +1,9 @@
 <?php 
 
 namespace App\Repositories;
+
 use App\Repositories\Interface\HotelRepositoryInterface;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Request\HotelRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
@@ -163,12 +165,15 @@ class HotelRepository implements HotelRepositoryInterface
         try {
             // Lấy thông tin của hotel theo id
             $hotel = $this->_model::findOrFail($hotel_id);
-            $owner_id = $data['owner_id'];
-            $owner = User::with('role')->find($owner_id);
-
             // Kiểm tra xem hotel có tồn tại không
             if (empty($hotel)) {
                 throw new ModelNotFoundException(__('exceptions.not_found.hotel'));
+            }
+
+            $owner_id = Auth::user()->id;
+            $owner = User::with('role')->find($owner_id);
+            if (empty($owner)) {
+                throw new ModelNotFoundException(__('exceptions.not_found.owner'));
             }
 
             // Kiểm tra xem user có quyền truy cập hotel này không

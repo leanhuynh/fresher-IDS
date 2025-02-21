@@ -73,7 +73,7 @@
                                 @enderror
                             </div>
                             <div class="col-md-6">
-                                <label class="labels">Role (Default is Admin) <span style="color:red">*</span></label>
+                                <label class="labels">Role (If no choose, no change for role) <span style="color:red">*</span></label>
                                 <select id="role" class="custom-select" name="role_id">
                                     <option value="">--Select Role--</option>
                                     @foreach($roles as $role)

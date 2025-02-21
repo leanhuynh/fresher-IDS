@@ -38,8 +38,8 @@ class HotelRepository implements HotelRepositoryInterface
             
             // Nếu owner không phải là admin thì chỉ hiển thị hotel của owner đó
             // nếu owner là admin thì hiển thị tất cả hotel
-            if ($owner->role->name !== Constant::ADMIN_ROLE_NAME) {
-                $query->where('owner_id', $filters['owner_id']);
+            if ($owner->role->name != Constant::ADMIN_ROLE_NAME) {
+                $query->where('owner_id', $owner_id);
             }
 
             // Lọc theo city_id, hotel_code, name_en
@@ -80,7 +80,7 @@ class HotelRepository implements HotelRepositoryInterface
 
             // đã kiểm tra trong middleware CheckOwnerHotel
             // Kiểm tra xem user có quyền truy cập hotel này không
-            // if ($owner->role->name !== Constant::ADMIN_ROLE_NAME && 
+            // if ($owner->role->name != Constant::ADMIN_ROLE_NAME && 
             //         $hotel->owner_id != $owner_id) {
             //     throw new AuthorizationException(__('exceptions.permission.action.view.hotel'));
             // }
@@ -144,7 +144,7 @@ class HotelRepository implements HotelRepositoryInterface
             
             // Nếu owner không phải là admin thì chỉ hiển thị hotel của owner đó
             // nếu owner là admin thì hiển thị tất cả hotel
-            if ($owner->role->name !== Constant::ADMIN_ROLE_NAME) {
+            if ($owner->role->name != Constant::ADMIN_ROLE_NAME) {
                 $query->where('owner_id', $filters['owner_id']);
             }
 
@@ -192,7 +192,7 @@ class HotelRepository implements HotelRepositoryInterface
             }
 
             // Kiểm tra xem user có quyền truy cập hotel này không
-            if ($owner->role->name !== Constant::ADMIN_ROLE_NAME && $hotel->owner_id != $data['owner_id']) {
+            if ($owner->role->name != Constant::ADMIN_ROLE_NAME && $hotel->owner_id != $owner_id) {
                 throw new AuthorizationException(__('exceptions.permission.action.edit.hotel'));
             }
 
@@ -219,7 +219,8 @@ class HotelRepository implements HotelRepositoryInterface
         } catch (QueryException $e) {
             throw new QueryException(__('exceptions.database.error'));
         } catch (Exception $e) {
-            throw new Exception(__('exceptions.unknown'));
+            // throw new Exception(__('exceptions.unknown'));
+            throw new Exception($e->getMessage());
         }
     }
 
@@ -239,7 +240,7 @@ class HotelRepository implements HotelRepositoryInterface
             }
 
             // nếu owner không phải là admin
-            if ($owner->role->name !== Constant::ADMIN_ROLE_NAME) {
+            if ($owner->role->name != Constant::ADMIN_ROLE_NAME) {
                 // Kiểm tra xem user có quyền truy cập hotel này không
                 if ($hotel->owner_id != $owner_id) {
                     throw new AuthorizationException(__('exceptions.permission.action.delete.hotel'));

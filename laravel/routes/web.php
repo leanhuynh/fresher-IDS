@@ -34,7 +34,7 @@ Route::prefix('/users')->middleware('auth')->group(function() {
     Route::get('/profile', [UserController::class, 'viewUserProfileById'])->name('users.getProfile');
 
     Route::get('/edit/{user}', [UserController::class, 'editUserProfileById'])->name('users.editProfile')->middleware('admin');
-    Route::put('/edit/{user}', [UserController::class, 'editUserProfileByIdAPI'])->name('users.editProfileAPI')->middleware('admin');
+    Route::put('/edit/{user}', [UserController::class, 'editUserProfileByIdAPI'])->name('users.editProfileAPI');
 
     Route::delete('/delete/{user}', [UserController::class, 'deleteAPI'])->name('users.deleteAPI')->middleware('admin');
 });

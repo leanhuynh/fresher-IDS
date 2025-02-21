@@ -56,7 +56,7 @@ class UserRepository implements UserRepositoryInterface
 
             // tìm kiếm thông tin author
             $auth = $this->_model::with('role')->findorFail($auth_id);
-            if ($auth->role->name !== Constant::ADMIN_ROLE_NAME) {
+            if ($auth->role->name != Constant::ADMIN_ROLE_NAME) {
                 throw new AuthorizationException(__('exceptions.permission.action.create.user'));
             }
 
@@ -108,8 +108,8 @@ class UserRepository implements UserRepositoryInterface
     public function updateUser(array $data, $id) {
         try {
             $auth_id = Auth::user()->id;
-            $user = $this->_model::with('role')->findorFail($id); // find user by id or throw exception
-            $auth = $this->_model::with('role')->findorFail($auth_id); // find user by id or throw exception
+            $user = $this->_model::with('role')->find($id); // find user by id or throw exception
+            $auth = $this->_model::with('role')->find($auth_id); // find user by id or throw exception
             $admin = Role::where('name', Constant::ADMIN_ROLE_NAME)->first();
 
             // check empty
@@ -130,9 +130,9 @@ class UserRepository implements UserRepositoryInterface
             if (isset($data['role_id']) && !empty($data['role_id'])) {
 
                 // trường hợp user đang login là không phải Admin
-                if ($auth->role->name !== Constant::ADMIN_ROLE_NAME) {
+                if ($auth->role->name != Constant::ADMIN_ROLE_NAME) {
                     // Members thay đổi thông tin của tài khoản khác
-                    if ($auth_id !== $id) {
+                    if ($auth_id != $id) {
                         throw new AuthorizationException(
                         __('exceptions.permission.action.edit.role')); 
                     } else if ($data['role_id'] != $user->role->id) {

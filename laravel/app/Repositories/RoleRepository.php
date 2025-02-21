@@ -107,7 +107,7 @@ class RoleRepository implements RoleRepositoryInterface
             if (empty($auth)) {
                 throw new ModelNotFoundException(__('exceptions.not_found.auth'));
             }
-            if ($auth->role->name !== Constant::ADMIN_ROLE_NAME) {
+            if ($auth->role->name != Constant::ADMIN_ROLE_NAME) {
                 throw new AuthorizationException(__('exceptions.permission.action.delete.user'));
             }
 
@@ -117,7 +117,7 @@ class RoleRepository implements RoleRepositoryInterface
                 throw new RoleInUseException();
             }
 
-            if ($auth->role->name !== Constant::ADMIN_ROLE_NAME) {
+            if ($auth->role->name != Constant::ADMIN_ROLE_NAME) {
                 throw new AuthorizationException(__('exceptions.permission.action.delete.role'));
             }
 

@@ -29,17 +29,12 @@ class HotelController extends Controller
         try {
             $owner_id = Auth::user()->id;
             $cities = $this->_cityService->getAll();
-            $hotels = $this->_hotelService->getHotelsByOwnerId($owner_id);
+            $filters = $request->only(['city_id', 'hotel_code', 'name_en']);
+            $hotels = $this->_hotelService->getHotelsByOwnerId($filters, $owner_id);
 
-            if ($request->ajax()) {
-                return response()->json([
-                    'hotels' => $hotels,
-                    'paginationHtml' => $hotels->links('vendor.pagination.custom')->render(),
-                ]);
-            }
             return view('hotels.index', compact('hotels', 'cities'));
         } catch (AuthorizationException $e) {
-            Log::warning('Unauthorized access: ' . $e->getMessage());
+            Log::error('Unauthorized access: ' . $e->getMessage());
             return view('error.default', [
                 'status' => StatusCode::HTTP_STATUS_FORBIDDEN,
                 'message' => $e->getMessage()
@@ -60,7 +55,7 @@ class HotelController extends Controller
             Log::info('Create hotel');
             return view('hotels.create', compact('cities'));
         } catch (AuthorizationException $e) {
-            Log::warning('Unauthorized access: ' . $e->getMessage());
+            Log::error('Unauthorized access: ' . $e->getMessage());
             return view('error.default', [
                 'status' => StatusCode::HTTP_STATUS_FORBIDDEN,
                 'message' => $e->getMessage()
@@ -94,7 +89,7 @@ class HotelController extends Controller
             Log::info("View hotel with id {$hotel_id}");
             return view('hotels.view', compact('hotel'));
         } catch (AuthorizationException $e) {
-            Log::warning('Unauthorized access: ' . $e->getMessage());
+            Log::error('Unauthorized access: ' . $e->getMessage());
             return view('error.default', [
                 'status' => StatusCode::HTTP_STATUS_FORBIDDEN,
                 'message' => $e->getMessage()
@@ -115,7 +110,7 @@ class HotelController extends Controller
             $hotel = $this->_hotelService->findHotelById($hotel_id);
             return view('hotels.edit', compact('hotel', 'cities'));
         } catch (AuthorizationException $e) {
-            Log::warning('Unauthorized access: ' . $e->getMessage());
+            Log::error('Unauthorized access: ' . $e->getMessage());
             return view('error.default', [
                 'status' => StatusCode::HTTP_STATUS_FORBIDDEN,
                 'message' => $e->getMessage()
@@ -135,6 +130,19 @@ class HotelController extends Controller
             $hotel = $this->_hotelService->updateHotel($request->validated(), $hotel_id);
             log::info("edit hotel successfully with id : {$hotel->id} and owner id : {$hotel->owner_id}");
             return redirect()->back()->with('success', __('messages.hotel.update.success'));
+        } catch (Exception $e) {
+            log::error($e->getMessage());
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function deleteAPI(Request $request, $hotel_id)
+    {
+        try {
+            $owner_id = Auth::user()->id;
+            $this->_hotelService->deleteHotel($hotel_id, $owner_id);
+            log::info("delete hotel successfully with id : {$hotel_id} and owner id : {$owner_id}");
+            return redirect()->back()->with('success', __('messages.hotel.delete.success'));
         } catch (Exception $e) {
             log::error($e->getMessage());
             return redirect()->back()->with('error', $e->getMessage());

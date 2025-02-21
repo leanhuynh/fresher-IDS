@@ -13,13 +13,12 @@ class HotelService {
         $this->_hotelRepository = $hotelRepository;
     }
 
-    public function getHotelsByOwnerId($owner_id) {
-        return $this->_hotelRepository->getHotelsByOwnerId($owner_id);
+    public function getHotelsByOwnerId(array $filters, $owner_id) {
+        return $this->_hotelRepository->getHotelsByOwnerId($filters, $owner_id);
     }
 
     public function findHotelById($hotel_id) {
-        $owner_id = Auth::user()->id;
-        return $this->_hotelRepository->findHotelById($hotel_id, $owner_id);
+        return $this->_hotelRepository->findHotelById($hotel_id);
     }
 
     public function createHotel(array $data, $owner_id) {

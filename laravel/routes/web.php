@@ -49,6 +49,8 @@ Route::prefix('/hotels')->middleware('auth')->group(function() {
     
     Route::get('/edit/{hotel}', [HotelController::class, 'editHotel'])->name('hotels.editHotel')->middleware('hotel.owner');
     Route::put('/edit/{hotel}', [HotelController::class, 'editHotelAPI'])->name('hotels.editHotelAPI')->middleware('hotel.owner');
+
+    Route::delete('/delete/{hotel}', [HotelController::class, 'deleteAPI'])->name('hotels.deleteAPI')->middleware('hotel.owner');
 });
 
 Route::prefix('/roles')->middleware(['auth', 'admin'])->group(function() {

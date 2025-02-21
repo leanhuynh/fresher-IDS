@@ -12,6 +12,7 @@
                 <table class="table">
                     <tbody>
                         <tr><th>City</th><td>{{ $hotel->city->name ?? 'N/A' }}</td></tr>
+                        <tr><th>Owner</th><td>{{ $hotel->user->user_name ?? 'N/A' }}</td></tr>
                         <tr><th>Hotel Code</th><td>{{ $hotel->hotel_code ?? 'N/A' }}</td></tr>
                         <tr>
                             <th>Hotel Name (EN)</th>

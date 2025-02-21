@@ -24,20 +24,33 @@ class HotelRepository implements HotelRepositoryInterface
         $this->_model = app()->make(\App\Models\Hotel::class);
     }
 
-    public function getHotelsByOwnerId($owner_id) 
+    public function getHotelsByOwnerId(array $filters, $owner_id) 
     {
         try {
-            $owner = User::with('role')->find($owner_id);
+            // thực thi câu truy vấn
+            $query = $this->_model::query()->with(['city', 'user']);
+
+            // check owner exists
+            $owner = User::with('role')->findOrFail($owner_id);
             if (empty($owner)) {
-                throw new ModuleNotFoundException(__('exceptions.not_found.owner'));
+                throw new ModelNotFoundException(__('exceptions.not_found.owner'));
+            }
+            
+            // Nếu owner không phải là admin thì chỉ hiển thị hotel của owner đó
+            // nếu owner là admin thì hiển thị tất cả hotel
+            if ($owner->role->name !== Constant::ADMIN_ROLE_NAME) {
+                $query->where('owner_id', $filters['owner_id']);
             }
 
-            // thực thi câu truy vấn
-            $query = $this->_model::query()->with(['user', 'city']);
-
-            // nếu role của người dùng hiện tại không phải là Admin
-            if ($owner->role->name !== Constant::ADMIN_ROLE_NAME) {
-                $query->where('owner_id', $owner_id);
+            // Lọc theo city_id, hotel_code, name_en
+            if (!empty($filters['city_id'])) {
+                $query->where('city_id', $filters['city_id']);
+            }
+            if (!empty($filters['hotel_code'])) {
+                $query->where('hotel_code', 'LIKE', "%{$filters['hotel_code']}%");
+            }
+            if (!empty($filters['name_en'])) {
+                $query->where('name_en', 'LIKE', "%{$filters['name_en']}%");
             }
 
             $hotels = $query->orderby('name_en', 'asc')->paginate(Constant::PAGINATE_DEFAULT);
@@ -51,24 +64,26 @@ class HotelRepository implements HotelRepositoryInterface
         }
     }
 
-    public function findHotelById($hotel_id, $owner_id) {
+    public function findHotelById($hotel_id) {
         try {
+            $owner_id = Auth::user()->id;
             $owner = User::with('role')->find($owner_id);
             if (empty($owner)) {
-                throw new ModelNotFoundException(__('exceptions.not_found.author'));
+                throw new ModelNotFoundException(__('exceptions.not_found.owner'));
             }
 
             // Lấy thông tin của hotel theo id
-            $hotel = $this->_model::with('city')->findOrFail($hotel_id);
+            $hotel = $this->_model::with(['city', 'user'])->findOrFail($hotel_id);
             if (empty($hotel)) {
                 throw new ModelNotFoundException(__('exceptions.not_found.hotel'));
             }
 
+            // đã kiểm tra trong middleware CheckOwnerHotel
             // Kiểm tra xem user có quyền truy cập hotel này không
-            if ($owner->role->name !== Constant::ADMIN_ROLE_NAME && 
-                    $hotel->owner_id != $owner_id) {
-                throw new AuthorizationException(__('exceptions.permission.action.view.hotel'));
-            }
+            // if ($owner->role->name !== Constant::ADMIN_ROLE_NAME && 
+            //         $hotel->owner_id != $owner_id) {
+            //     throw new AuthorizationException(__('exceptions.permission.action.view.hotel'));
+            // }
 
             return $hotel;
         } catch (AuthorizationException $e) {
@@ -224,7 +239,7 @@ class HotelRepository implements HotelRepositoryInterface
             }
 
             // nếu owner không phải là admin
-            if ($owner->role->name !== Role::ADMIN_ROLE_NAME) {
+            if ($owner->role->name !== Constant::ADMIN_ROLE_NAME) {
                 // Kiểm tra xem user có quyền truy cập hotel này không
                 if ($hotel->owner_id != $owner_id) {
                     throw new AuthorizationException(__('exceptions.permission.action.delete.hotel'));

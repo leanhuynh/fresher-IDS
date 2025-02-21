@@ -4,9 +4,9 @@ namespace App\Repositories\Interface;
 
 interface HotelRepositoryInterface 
 {
-    public function getHotelsByOwnerId($hotel_id);
+    public function getHotelsByOwnerId(array $filters, $owner_id);
 
-    public function findHotelById($hotel_id, $owner_id);
+    public function findHotelById($hotel_id);
 
     public function createHotel(array $data, $owner_id);
 

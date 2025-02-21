@@ -125,6 +125,7 @@ class UserRepository implements UserRepositoryInterface
 
             // init role_id value of user
             $role_id = $user->role_id;
+
             // check permission of actor
             if (isset($data['role_id']) && !empty($data['role_id'])) {
 

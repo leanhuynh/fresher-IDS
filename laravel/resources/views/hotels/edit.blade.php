@@ -6,7 +6,7 @@
         @csrf
         @method('PUT')
         <div class="modal-header" style="background-color:black;">
-            <h5 class="modal-title" style="color:white;">Hotel Information</h5>
+            <h5 class="modal-title" style="color:white;">User Information</h5>
         </div>
 
         <!-- Hiển thị thông báo lỗi nếu có -->

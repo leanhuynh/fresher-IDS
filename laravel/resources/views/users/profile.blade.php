@@ -74,7 +74,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="labels">Role (Default is Admin) <span style="color:red">*</span></label>
-                                <select id="role" class="custom-select">
+                                <select id="role" class="custom-select" name="role_id">
                                     <option value="">--Select Role--</option>
                                     @foreach($roles as $role)
                                         <option value="{{ $role->id }}" {{ $role->id == $user->role_id ? 'selected' : '' }}>
@@ -83,7 +83,7 @@
                                     @endforeach
                                 </select>
                                 @error('role_id')
-                                <div class="text-danger mt-1">{{ $message }}</div>
+                                    <div class="text-danger mt-1">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>

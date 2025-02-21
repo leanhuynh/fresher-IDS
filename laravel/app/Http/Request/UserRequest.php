@@ -14,7 +14,7 @@ class UserRequest extends FormRequest
     public function rules()
     {
         return [
-            'auth_id' => 'nullable|integer|exists:\App\Models\User,id',
+            // 'auth_id' => 'nullable|integer|exists:\App\Models\User,id',
             'role_id' => 'nullable|integer|exists:\App\Models\Role,id',
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',

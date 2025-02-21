@@ -68,7 +68,7 @@ class UserController extends Controller
             $user = $this->_userService->getUserProfileById($id);
             $roles = $this->_roleService->getAll();
             Log::info("get info of user id = {$id}");
-            return view('users.profile', compact('user', 'roles'));
+            return view('users.edit', compact('user', 'roles'));
         } catch (AuthorizationException $e) {
             Log::error($e->getMessage());
             session()->flash('error', $e->getMessage());

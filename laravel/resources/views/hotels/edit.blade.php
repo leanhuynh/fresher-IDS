@@ -35,7 +35,7 @@
                     </div>
                     <div class="col-md-3">
                         <label class="form-label" for="city_id">City <span style="color: red;">*</span></label>
-                        <select class="form-select {{ $errors->has('city') ? 'is-invalid' : '' }}" id="city_id" name="city_id">
+                        <select class="form-select {{ $errors->has('city_id') ? 'is-invalid' : '' }}" id="city_id" name="city_id">
                             <option value="">--Select City--</option>
                             @foreach($cities as $city)
                                 <option value="{{ $city->id }}" {{ old('city', $hotel->city_id ?? '') == $city->id ? 'selected' : '' }}>

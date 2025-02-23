@@ -202,7 +202,7 @@
         $("#cancelBtn").click(function() {
             Swal.fire({
                 title: "Hotel Management Alert",
-                text: "Are you sure to cancel the edit user profile process?",
+                text: "Are you sure to cancel the edit user process?",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",

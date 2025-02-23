@@ -8,6 +8,8 @@ services:
       dockerfile: php/Dockerfile
     image: laravel-IDS/php
     container_name: laravel_app
+    env_file:
+      - .env.production
     restart: unless-stopped
     tty: true
     environment:

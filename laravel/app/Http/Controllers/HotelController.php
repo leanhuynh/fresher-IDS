@@ -145,7 +145,7 @@ class HotelController extends Controller
             return redirect()->back()->with('success', __('messages.hotel.delete.success'));
         } catch (Exception $e) {
             log::error($e->getMessage());
-            return redirect()->back()->with('error', $e->getMessage());
+            return redirect()->back()->with('fail', $e->getMessage());
         }
     }
 }

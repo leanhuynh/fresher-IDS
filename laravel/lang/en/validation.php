@@ -189,7 +189,9 @@ return [
     'name' => [
         'required' => 'Name is required',
         'unique' => 'Name must be unique',
-        'max' => 'Name can not be long than 255 characters'
+        'max' => 'Name can not be long than 255 characters',
+        'regex' => 'The :attribute must only contain letters and numbers.',
+        'regex_space' => 'The :attribute must only contain letters, numbers and spaces.'
     ],
 
     // 'email' => [

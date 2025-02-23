@@ -17,7 +17,7 @@
     function customAlert(message, type) {
         // type: error, warning, info, success
         var color = 'green';
-        if (type == 'error') {
+        if (type == 'error' || type == 'fail') {
             color = 'red';
         } else if (type == 'warning') {
             color = 'orange';
@@ -44,7 +44,7 @@
         if ('{{session('success')}}') {
             customAlert('{{session('success')}}', 'success');
         }
-        if ('{{session('error')}}') {
+        if ('{{session('fail')}}') {
             customAlert('{{session('error')}}', 'error');
         }
         // if ('{{session('warning')}}') {

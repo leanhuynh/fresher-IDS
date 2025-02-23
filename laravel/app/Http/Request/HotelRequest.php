@@ -58,13 +58,13 @@ class HotelRequest extends FormRequest
             'name_en.string' => __('validation.string'),
             'name_en.max' => __('validation.max'),
             'name_en.unique' => __('validation.unique'),
-            'name_en.regex' => __('validation.regex'),
+            'name_en.regex' => __('validation.name.regex_space'),
 
             'name_jp.required' => __('validation.required'),
             'name_jp.string' => __('validation.string'),
             'name_jp.max' => __('validation.max'),
             'name_jp.unique' => __('validation.unique'),
-            'name_jp.regex' => __('validation.regex'),
+            'name_jp.regex' => __('validation.name.regex_space'),
 
             'city_id.required' => __('validation.required'),
             'city_id.integer' => __('validation.integer'),

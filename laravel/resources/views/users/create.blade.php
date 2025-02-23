@@ -75,7 +75,7 @@
                                 <select name="role_id" class="custom-select">
                                     <option value="">--Select Role--</option>
                                     @foreach($roles as $role)
-                                        <option value="{{ $role->id }}" {{ old('role_id', $user->role_id) == $role->id ? 'selected' : '' }}>
+                                        <option value="{{ $role->id }}" {{ old('role_id') }}>
                                             {{ $role->name }}
                                         </option>
                                     @endforeach
@@ -122,7 +122,7 @@
 
                         <div class="mt-5 text-center">
                             <button id="cancelBtn" class="btn btn-secondary profile-button" type="button">Cancel</button>
-                            <button id="saveBtn" class="btn btn-primary disabled profile-button" type="submit">Save Profile</button>
+                            <button id="saveBtn" class="btn btn-primary profile-button" type="submit">Save Profile</button>
                         </div>
                     </div>
                 </div>
@@ -158,13 +158,13 @@
 
     function checkChanges() {
         if (
-            first_name.value !== initialValues.first_name ||
-            last_name.value !== initialValues.last_name ||
-            user_name.value !== initialValues.user_name ||
-            role_id.value !== initialValues.role_id ||
-            address.value !== initialValues.address ||
-            email.value !== initialValues.email ||
-            password.value !== initialValues.password
+            first_name.value != initialValues.first_name ||
+            last_name.value != initialValues.last_name
+            user_name.value != initialValues.user_name ||
+            role_id.value != initialValues.role_id ||
+            address.value != initialValues.address ||
+            email.value != initialValues.email ||
+            password.value != initialValues.password
         ) {
             saveButton.classList.remove("disabled"); 
             saveButton.removeAttribute("disabled");
@@ -175,13 +175,13 @@
     }
 
     // activate check changes
-    first_name.addEventListener("input", checkChanges);
-    last_name.addEventListener("input", checkChanges);
-    user_name.addEventListener("input", checkChanges);
-    role_id.addEventListener("input", checkChanges);
-    address.addEventListener("input", checkChanges);
-    email.addEventListener("input", checkChanges);
-    password.addEventListener("input", checkChanges);
+    first_name.addEventListener("input", checkChanges());
+    last_name.addEventListener("input", checkChanges());
+    user_name.addEventListener("input", checkChanges());
+    role_id.addEventListener("input", checkChanges());
+    address.addEventListener("input", checkChanges());
+    email.addEventListener("input", checkChanges());
+    password.addEventListener("input", checkChanges());
 </script>
 <!-- upload Image -->
 <script>

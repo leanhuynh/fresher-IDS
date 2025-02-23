@@ -129,7 +129,7 @@ class UserController extends Controller
             return redirect()->back()->with('success', __('messages.user.delete.success'));
         } catch (Exception $e) {
             log::error($e->getMessage());
-            return redirect()->back()->with('error', $e->getMessage());
+            return redirect()->back()->with('fail', $e->getMessage());
         }
     }
 }

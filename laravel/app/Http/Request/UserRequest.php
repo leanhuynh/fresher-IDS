@@ -46,7 +46,7 @@ class UserRequest extends FormRequest
             'last_name.max' => __('validation.max'),
 
             'user_name.required' => __('validation.required'),
-            'user_name.regex' => __('validation.regex'),
+            'user_name.regex' => __('validation.name.regex'),
             'user_name.unique' => __('validation.unique'),
             'user_name.max' => __('validation.max'),
 
@@ -63,6 +63,35 @@ class UserRequest extends FormRequest
 
             'avatar.image' => __('validation.image'),
             'avatar.max' => __('validation.max'),
+
+
+            // 'role_id.exists' => 'The :attribute value is not exists in database Role',
+            // 'role_id.integer' => 
+
+            // 'first_name.required' => __('validation.required'),
+            // 'first_name.max' => __('validation.max'),
+
+            // 'last_name.required' => __('validation.required'),
+            // 'last_name.max' => __('validation.max'),
+
+            // 'user_name.required' => __('validation.required'),
+            // 'user_name.regex' => __('validation.regex'),
+            // 'user_name.unique' => __('validation.unique'),
+            // 'user_name.max' => __('validation.max'),
+
+            // 'email.required' => __('validation.required'),
+            // 'email.max' => __('validation.max'),
+            // 'email.unique' => __('validation.unique'),
+            // 'email.email' => __('validation.email'),
+
+            // // 'password.nullable' => __('validation.nullable'),
+            // 'password.min' => __('validation.min'),
+            // 'password.max' => __('validation.max'),
+            // 'password.confirmed' => __('validation.confirmed'),
+            // 'password.regex' => __('validation.regex'),
+
+            // 'avatar.image' => __('validation.image'),
+            // 'avatar.max' => __('validation.max'),
         ];
     }
 }
